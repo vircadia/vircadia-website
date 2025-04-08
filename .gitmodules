@@ -1,0 +1,3 @@
+[submodule "docs/vircadia-world"]
+	path = docs/vircadia-world
+	url = https://github.com/vircadia/vircadia-world
