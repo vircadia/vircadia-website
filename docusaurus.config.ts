@@ -39,6 +39,12 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           path: 'docs/vircadia-world/',
           routeBasePath: 'vircadia-world',
+          exclude: [
+            'cli/vircadia-world-sdk-ts/**',
+            'client/web_babylon_js/volume/vircadia-world-sdk-ts/**',
+            'server/service/api/volume/vircadia-world-sdk-ts/**',
+            'server/service/tick/volume/vircadia-world-sdk-ts/**'
+          ],
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
