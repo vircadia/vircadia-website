@@ -127,7 +127,7 @@ const config: Config = {
 		announcementBar: {
 			id: "support_us",
 			content:
-				'Need help integrating Vircadia into your project? <a href="mailto:hello@vircadia.com">Get in touch!</a>',
+				'Need help integrating Vircadia? <a href="mailto:hello@vircadia.com">Get in touch!</a>',
 			backgroundColor: "#fafbfc",
 			textColor: "#091E42",
 			isCloseable: false,
