@@ -108,10 +108,12 @@ function FeaturesSection() {
 				<FeatureBox wide>
 					<FeatureContent>
 						<FeatureBoxIcon>⚡️</FeatureBoxIcon>
-						<FeatureBoxTitle>Fast Development</FeatureBoxTitle>
+						<FeatureBoxTitle>Fast & Simple Development</FeatureBoxTitle>
 						<FeatureBoxDescription>
-							Instant server start and lightning fast HMR that stays fast
-							regardless of app size.
+							The{" "}
+							<a href="/vircadia-world/cli/#quick-start">Vircadia World CLI</a>{" "}
+							is a simple and easy to use CLI that interfaces with your entire
+							workflow.
 						</FeatureBoxDescription>
 					</FeatureContent>
 				</FeatureBox>
@@ -119,10 +121,10 @@ function FeaturesSection() {
 				<FeatureBox tall>
 					<FeatureContent>
 						<FeatureBoxIcon>📦</FeatureBoxIcon>
-						<FeatureBoxTitle>Optimized Build</FeatureBoxTitle>
+						<FeatureBoxTitle>All bundled up</FeatureBoxTitle>
 						<FeatureBoxDescription>
-							Pre-configured build setup with multi-page support and optimized
-							asset handling.
+							No more S3 madness, assets are stored in the database alongside
+							entities.
 						</FeatureBoxDescription>
 					</FeatureContent>
 				</FeatureBox>
@@ -130,29 +132,31 @@ function FeaturesSection() {
 				<FeatureBox>
 					<FeatureContent>
 						<FeatureBoxIcon>🔌</FeatureBoxIcon>
-						<FeatureBoxTitle>Universal Plugin</FeatureBoxTitle>
+						<FeatureBoxTitle>Integrate anywhere</FeatureBoxTitle>
 						<FeatureBoxDescription>
-							Rollup-superset plugin interface shared between dev and build.
+							Use raw queries, or use our SDK's composable functions.
 						</FeatureBoxDescription>
 					</FeatureContent>
 				</FeatureBox>
 
 				<FeatureBox>
 					<FeatureContent>
-						<FeatureBoxIcon>🔑</FeatureBoxIcon>
-						<FeatureBoxTitle>TypeScript Support</FeatureBoxTitle>
+						<FeatureBoxIcon>📜</FeatureBoxIcon>
+						<FeatureBoxTitle>Apache 2.0 Licensed</FeatureBoxTitle>
 						<FeatureBoxDescription>
-							First-class TypeScript support with performance optimizations.
+							Enterprise-friendly open source license providing legal certainty
+							and flexibility for commercial use and distribution.
 						</FeatureBoxDescription>
 					</FeatureContent>
 				</FeatureBox>
 
 				<FeatureBox wide>
 					<FeatureContent>
-						<FeatureBoxIcon>🌐</FeatureBoxIcon>
-						<FeatureBoxTitle>Community Driven</FeatureBoxTitle>
+						<FeatureBoxIcon>🔄</FeatureBoxIcon>
+						<FeatureBoxTitle>Continuous Integration</FeatureBoxTitle>
 						<FeatureBoxDescription>
-							An active ecosystem with hundreds of plugins and integrations.
+							Every component thoroughly tested with comprehensive CI pipelines
+							ensuring stability and reliability across the entire system.
 						</FeatureBoxDescription>
 					</FeatureContent>
 				</FeatureBox>
