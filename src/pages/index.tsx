@@ -63,11 +63,6 @@ const FeatureBoxDescription = styled.p`
 	line-height: 1.6;
 `;
 
-const FeatureBoxIcon = styled.div`
-	font-size: 2rem;
-	margin-bottom: 1rem;
-`;
-
 interface FeatureBoxProps {
 	children: ReactNode;
 	$tall?: boolean;
@@ -308,15 +303,9 @@ function FeaturesSection() {
 	return (
 		<>
 			<FeaturesContainer>
-				<SectionTitle>Core Technology Features</SectionTitle>
-				<SectionDescription>
-					Powerful building blocks for creating immersive and scalable virtual
-					worlds
-				</SectionDescription>
 				<FeaturesGrid>
-					<FeatureBox $tall $wide>
+					<FeatureBox $tall>
 						<FeatureContent>
-							<FeatureBoxIcon>🔄</FeatureBoxIcon>
 							<FeatureBoxTitle>Unified Architecture</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								A complete platform that bridges 3D assets and data to multiple
@@ -329,63 +318,79 @@ function FeaturesSection() {
 									margin: "-1rem 0",
 								}}
 							>
-								<FlowDiagram>
-									<DiagramSection>
-										<DiagramIcon>
-											<SqlIcon />
-										</DiagramIcon>
-										<DiagramLabel>.sql</DiagramLabel>
-									</DiagramSection>
+								<FlowDiagram style={{ flexDirection: "column" }}>
+									<div
+										style={{
+											display: "flex",
+											justifyContent: "center",
+											width: "100%",
+										}}
+									>
+										<DiagramSection style={{ margin: "0 10px" }}>
+											<DiagramIcon>.sql</DiagramIcon>
+										</DiagramSection>
 
-									<ConnectingLine />
+										<DiagramSection style={{ margin: "0 10px" }}>
+											<DiagramIcon>.glb</DiagramIcon>
+										</DiagramSection>
+									</div>
 
-									<DiagramSection>
-										<DiagramIcon>
-											<GlbIcon />
-										</DiagramIcon>
-										<DiagramLabel>.glb</DiagramLabel>
-									</DiagramSection>
-
-									<ConnectingLine />
-
-									<CenterIcon>
-										<VircadiaIcon />
-									</CenterIcon>
-
-									<ConnectingLine />
+									<ConnectingLine
+										style={{ width: "2px", height: "20px", margin: "10px 0" }}
+									/>
 
 									<DiagramSection>
-										<DiagramIcon>
-											<UnityIcon />
+										<DiagramIcon
+											style={{
+												borderRadius: "8px",
+												width: "90px",
+												height: "90px",
+											}}
+										>
+											<VircadiaIcon />
 										</DiagramIcon>
-										<DiagramLabel>Unity</DiagramLabel>
+										<DiagramLabel>Vircadia</DiagramLabel>
 									</DiagramSection>
 
-									<ConnectingLine />
+									<ConnectingLine
+										style={{ width: "2px", height: "20px", margin: "10px 0" }}
+									/>
 
-									<DiagramSection>
-										<DiagramIcon>
-											<ChromeIcon />
-										</DiagramIcon>
-										<DiagramLabel>Chrome</DiagramLabel>
-									</DiagramSection>
+									<div
+										style={{
+											display: "flex",
+											justifyContent: "center",
+											width: "100%",
+										}}
+									>
+										<DiagramSection style={{ margin: "0 10px" }}>
+											<DiagramIcon>
+												<UnityIcon />
+											</DiagramIcon>
+											<DiagramLabel>Unity</DiagramLabel>
+										</DiagramSection>
 
-									<ConnectingLine />
+										<DiagramSection style={{ margin: "0 10px" }}>
+											<DiagramIcon>
+												<ChromeIcon />
+											</DiagramIcon>
+											<DiagramLabel>Web</DiagramLabel>
+										</DiagramSection>
 
-									<DiagramSection>
-										<DiagramIcon>
-											<UnrealIcon />
-										</DiagramIcon>
-										<DiagramLabel>Unreal</DiagramLabel>
-									</DiagramSection>
+										<DiagramSection style={{ margin: "0 10px" }}>
+											<DiagramIcon>
+												<UnrealIcon />
+											</DiagramIcon>
+											<DiagramLabel>Unreal</DiagramLabel>
+										</DiagramSection>
+									</div>
 								</FlowDiagram>
 							</div>
 						</FeatureContent>
 					</FeatureBox>
 
-					<FeatureBox>
+					<FeatureBox $wide>
 						<FeatureContent>
-							<FeatureBoxIcon>🗄️</FeatureBoxIcon>
 							<FeatureBoxTitle>PostgreSQL-Powered Worlds</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Define your entire world in SQL with enterprise database
@@ -397,36 +402,20 @@ function FeaturesSection() {
 
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxIcon>📝</FeatureBoxIcon>
-							<FeatureBoxTitle>Powerful Scripting</FeatureBoxTitle>
+							<FeatureBoxTitle>Realtime State Tracking</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								Gameplay functionality executed in user scripts, while
-								administrative and management tasks are handled through agent
-								scripts - providing flexibility and security.
+								High-performance server-side tracking of all entity states to
+								assist in anti-cheat and competitive gaming.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
 
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxIcon>⚡</FeatureBoxIcon>
-							<FeatureBoxTitle>World Tick Manager</FeatureBoxTitle>
-							<FeatureBoxDescription>
-								High-performance server-side tracking of all entity and asset
-								states to assist in anti-cheat, competitive gaming, and general
-								gameplay maintenance.
-							</FeatureBoxDescription>
-						</FeatureContent>
-					</FeatureBox>
-
-					<FeatureBox>
-						<FeatureContent>
-							<FeatureBoxIcon>🔄</FeatureBoxIcon>
 							<FeatureBoxTitle>Cross-Platform Realtime</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								Entities are shared between all clients in realtime across
-								multiple platforms: Unreal, Unity, Web, Blender, and more -
-								build once, deploy everywhere.
+								Entities synced in realtime across every platform: Unreal,
+								Unity, Web, Blender, and more.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
@@ -434,7 +423,7 @@ function FeaturesSection() {
 			</FeaturesContainer>
 
 			<FeaturesContainer>
-				<SectionTitle>Enterprise & Deployment Features</SectionTitle>
+				<SectionTitle>Easy to start, Advanced to scale</SectionTitle>
 				<SectionDescription>
 					Scale from prototype to production with enterprise-grade tools and
 					infrastructure
@@ -442,7 +431,6 @@ function FeaturesSection() {
 				<FeaturesGrid>
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxIcon>⚙️</FeatureBoxIcon>
 							<FeatureBoxTitle>One CLI To Rule Them All</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								The{" "}
@@ -457,7 +445,6 @@ function FeaturesSection() {
 
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxIcon>🏢</FeatureBoxIcon>
 							<FeatureBoxTitle>OSS for Enterprise</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Apache 2.0 licensed, providing legal certainty and flexibility
@@ -468,7 +455,6 @@ function FeaturesSection() {
 
 					<FeatureBox $wide>
 						<FeatureContent>
-							<FeatureBoxIcon>🚀</FeatureBoxIcon>
 							<FeatureBoxTitle>Enterprise-Grade Scalability</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Scale to millions of players and objects with millisecond
@@ -481,19 +467,17 @@ function FeaturesSection() {
 
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxIcon>🔒</FeatureBoxIcon>
 							<FeatureBoxTitle>Enterprise Security</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								OAuth 2.0 authentication with no passwords, validated by
-								partners like T-Systems, UA92, and more for secure access
-								management at scale.
+								partners like Deutsche Telekom, Manchester United, and more for
+								secure access management at scale.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
 
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxIcon>🐳</FeatureBoxIcon>
 							<FeatureBoxTitle>AAAA Scalability via Docker</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Containerized deployment enables Anywhere, Anytime, Any scale,
@@ -505,7 +489,6 @@ function FeaturesSection() {
 
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxIcon>🧪</FeatureBoxIcon>
 							<FeatureBoxTitle>Robust CI/CD Pipeline</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Every component thoroughly tested with comprehensive CI
@@ -638,7 +621,7 @@ const UnityIcon = () => (
 );
 
 const ChromeIcon = () => (
-	<img src="img/chrome.svg" alt="Chrome Browser Icon" width="40" height="40" />
+	<img src="img/chrome.svg" alt="Browser Icon" width="40" height="40" />
 );
 
 const UnrealIcon = () => (
