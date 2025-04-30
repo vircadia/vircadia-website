@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Typed from "typed.js";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
-import Heading from "@theme/Heading";
 import styled from "styled-components";
+import type { Node as FlowNode, Edge } from "@xyflow/react";
+import { ReactFlow, Position, ReactFlowProvider, Handle } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
 // Styled components
 const FeaturesContainer = styled.section`
@@ -144,75 +146,66 @@ const HeroSubtitle = styled.p`
 	}
 `;
 
-const FlowDiagram = styled.div`
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	margin: 2rem 0;
-	flex-wrap: wrap;
-	gap: 10px;
+// React Flow styled components
+const ReactFlowContainer = styled.div`
+	width: 100%;
+	height: 300px;
+	margin: 1rem 0;
 	
 	@media (max-width: 768px) {
-		flex-direction: column;
+		height: 400px;
 	}
 `;
 
-const DiagramSection = styled.div`
+const NodeContent = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 10px;
+	justify-content: center;
+	background-color: var(--ifm-card-background-color);
+	border-radius: 8px;
+	padding: 10px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	transition: all 0.3s ease;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	
+	&:hover {
+		box-shadow: 0 0 15px 2px var(--ifm-color-primary-light);
+		transform: scale(1.05);
+	}
 `;
 
-const DiagramIcon = styled.div`
-	width: 60px;
-	height: 60px;
+const IconContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: white;
-	border-radius: 8px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-	
-	@media (max-width: 768px) {
-		width: 50px;
-		height: 50px;
-	}
+	width: 100%;
+	height: 100%;
 `;
 
-const CenterIcon = styled(DiagramIcon)`
-	width: 90px;
-	height: 90px;
-	background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-darker) 100%);
-	border-radius: 50%;
-	margin: 0 15px;
-	position: relative;
-	z-index: 2;
-	
-	@media (max-width: 768px) {
-		width: 80px;
-		height: 80px;
-		margin: 15px 0;
-	}
-`;
-
-const DiagramLabel = styled.div`
+const NodeLabel = styled.div`
 	font-size: 0.85rem;
 	font-weight: bold;
 	color: var(--ifm-color-emphasis-800);
+	margin-top: 5px;
+	text-align: center;
 `;
 
-const ConnectingLine = styled.div`
-	height: 2px;
-	width: 40px;
-	background: linear-gradient(90deg, var(--ifm-color-primary), var(--ifm-color-primary-darker));
+const CenterNodeContainer = styled(NodeContent)`
+	width: 90px;
+	height: 90px;
+	border-radius: 12px;
+	z-index: 2;
+	filter: drop-shadow(0 0 12px rgba(var(--ifm-color-primary-rgb), 0.6));
+	animation: centerPulse 3s infinite ease-in-out;
 	position: relative;
 	
-	@media (max-width: 768px) {
-		width: 2px;
-		height: 20px;
-		margin: 0;
+	@keyframes centerPulse {
+		0% { filter: drop-shadow(0 0 8px rgba(var(--ifm-color-primary-rgb), 0.6)); }
+		50% { filter: drop-shadow(0 0 20px rgba(var(--ifm-color-primary-rgb), 0.8)); }
+		100% { filter: drop-shadow(0 0 8px rgba(var(--ifm-color-primary-rgb), 0.6)); }
 	}
 `;
 
@@ -299,6 +292,247 @@ const SectionDescription = styled.p`
 	color: var(--ifm-color-emphasis-700);
 `;
 
+// Add these styles to the styled components section
+const StyledHandle = styled(Handle)`
+	width: 8px;
+	height: 8px;
+	background-color: var(--ifm-color-primary);
+	border: 2px solid var(--ifm-card-background-color);
+	transition: all 0.2s ease;
+	
+	&:hover {
+		width: 10px;
+		height: 10px;
+		filter: drop-shadow(0 0 5px var(--ifm-color-primary));
+	}
+`;
+
+// Add a new styled component for themed SVGs
+const ThemedSvgIcon = styled.img`
+	filter: invert(38%) sepia(80%) saturate(1752%) hue-rotate(218deg) brightness(95%) contrast(101%);
+	
+	[data-theme='dark'] & {
+		filter: invert(56%) sepia(75%) saturate(4140%) hue-rotate(186deg) brightness(105%) contrast(101%);
+	}
+`;
+
+// Custom nodes for React Flow
+const SqlNode = ({ data }) => (
+	<NodeContent>
+		<StyledHandle type="source" position={Position.Bottom} id="sql-output" />
+		<IconContainer>.sql</IconContainer>
+	</NodeContent>
+);
+
+const GlbNode = ({ data }) => (
+	<NodeContent>
+		<StyledHandle type="source" position={Position.Bottom} id="glb-output" />
+		<IconContainer>.glb</IconContainer>
+	</NodeContent>
+);
+
+const VircadiaNode = ({ data }) => (
+	<CenterNodeContainer>
+		<StyledHandle
+			type="source"
+			position={Position.Bottom}
+			id="vircadia-output"
+		/>
+		<StyledHandle type="target" position={Position.Top} id="vircadia-input" />
+		<IconContainer>
+			<img src="img/icon.svg" alt="Vircadia Icon" width="60" height="60" />
+		</IconContainer>
+	</CenterNodeContainer>
+);
+
+const UnityNode = ({ data }) => (
+	<NodeContent>
+		<StyledHandle type="target" position={Position.Top} id="unity-input" />
+		<IconContainer>
+			<ThemedSvgIcon
+				src="img/unity.svg"
+				alt="Unity Game Engine Icon"
+				width="40"
+				height="40"
+			/>
+		</IconContainer>
+		<NodeLabel>Unity</NodeLabel>
+	</NodeContent>
+);
+
+const WebNode = ({ data }) => (
+	<NodeContent>
+		<StyledHandle type="target" position={Position.Top} id="web-input" />
+		<IconContainer>
+			<ThemedSvgIcon
+				src="img/chrome.svg"
+				alt="Browser Icon"
+				width="40"
+				height="40"
+			/>
+		</IconContainer>
+		<NodeLabel>Web</NodeLabel>
+	</NodeContent>
+);
+
+const UnrealNode = ({ data }) => (
+	<NodeContent>
+		<StyledHandle type="target" position={Position.Top} id="unreal-input" />
+		<IconContainer>
+			<ThemedSvgIcon
+				src="img/unreal.svg"
+				alt="Unreal Engine Icon"
+				width="40"
+				height="40"
+			/>
+		</IconContainer>
+		<NodeLabel>Unreal</NodeLabel>
+	</NodeContent>
+);
+
+// Node types definition for React Flow
+const nodeTypes = {
+	sqlNode: SqlNode,
+	glbNode: GlbNode,
+	vircadiaNode: VircadiaNode,
+	unityNode: UnityNode,
+	webNode: WebNode,
+	unrealNode: UnrealNode,
+};
+
+function VircadiaFlow() {
+	const [nodes, setNodes] = useState<FlowNode[]>([
+		{
+			id: "sql",
+			type: "sqlNode",
+			position: { x: 100, y: 0 },
+			data: {},
+			sourcePosition: Position.Bottom,
+			targetPosition: Position.Top,
+		},
+		{
+			id: "glb",
+			type: "glbNode",
+			position: { x: 314, y: 0 },
+			data: {},
+			sourcePosition: Position.Bottom,
+			targetPosition: Position.Top,
+		},
+		{
+			id: "vircadia",
+			type: "vircadiaNode",
+			position: { x: 185, y: 120 },
+			data: {},
+			sourcePosition: Position.Bottom,
+			targetPosition: Position.Top,
+		},
+		{
+			id: "unity",
+			type: "unityNode",
+			position: { x: 75, y: 240 },
+			data: {},
+			sourcePosition: Position.Top,
+			targetPosition: Position.Bottom,
+		},
+		{
+			id: "web",
+			type: "webNode",
+			position: { x: 200, y: 240 },
+			data: {},
+			sourcePosition: Position.Top,
+			targetPosition: Position.Bottom,
+		},
+		{
+			id: "unreal",
+			type: "unrealNode",
+			position: { x: 325, y: 240 },
+			data: {},
+			sourcePosition: Position.Top,
+			targetPosition: Position.Bottom,
+		},
+	]);
+
+	const [edges, setEdges] = useState<Edge[]>([
+		{
+			id: "sql-vircadia",
+			source: "sql",
+			target: "vircadia",
+			sourceHandle: "sql-output",
+			targetHandle: "vircadia-input",
+			animated: true,
+			style: { stroke: "var(--ifm-color-primary)", strokeWidth: 2 },
+		},
+		{
+			id: "glb-vircadia",
+			source: "glb",
+			target: "vircadia",
+			sourceHandle: "glb-output",
+			targetHandle: "vircadia-input",
+			animated: true,
+			style: { stroke: "var(--ifm-color-primary)", strokeWidth: 2 },
+		},
+		{
+			id: "vircadia-unity",
+			source: "vircadia",
+			target: "unity",
+			sourceHandle: "vircadia-output",
+			targetHandle: "unity-input",
+			animated: true,
+			style: { stroke: "var(--ifm-color-primary)", strokeWidth: 2 },
+		},
+		{
+			id: "vircadia-web",
+			source: "vircadia",
+			target: "web",
+			sourceHandle: "vircadia-output",
+			targetHandle: "web-input",
+			animated: true,
+			style: { stroke: "var(--ifm-color-primary)", strokeWidth: 2 },
+		},
+		{
+			id: "vircadia-unreal",
+			source: "vircadia",
+			target: "unreal",
+			sourceHandle: "vircadia-output",
+			targetHandle: "unreal-input",
+			animated: true,
+			style: { stroke: "var(--ifm-color-primary)", strokeWidth: 2 },
+		},
+	]);
+
+	const edgeOptions = {
+		animated: true,
+		style: { stroke: "var(--ifm-color-primary)", strokeWidth: 2 },
+	};
+
+	return (
+		<ReactFlowProvider>
+			<ReactFlowContainer>
+				<ReactFlow
+					nodes={nodes}
+					edges={edges}
+					nodeTypes={nodeTypes}
+					defaultEdgeOptions={edgeOptions}
+					fitView
+					zoomOnScroll={false}
+					zoomOnPinch={false}
+					zoomOnDoubleClick={false}
+					panOnScroll={false}
+					panOnDrag={false}
+					proOptions={{
+						hideAttribution: true,
+					}}
+					attributionPosition="bottom-left"
+					connectionLineStyle={{
+						stroke: "var(--ifm-color-primary)",
+						strokeWidth: 2,
+					}}
+				></ReactFlow>
+			</ReactFlowContainer>
+		</ReactFlowProvider>
+	);
+}
+
 function FeaturesSection() {
 	return (
 		<>
@@ -308,83 +542,17 @@ function FeaturesSection() {
 						<FeatureContent>
 							<FeatureBoxTitle>Unified Architecture</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								A complete platform that bridges 3D assets and data to multiple
-								runtime platforms.
+								A complete framework that bridges 3D assets and data to all
+								platforms.
 							</FeatureBoxDescription>
 							<div
 								style={{
-									transform: "scale(0.85)",
-									transformOrigin: "center",
-									margin: "-1rem 0",
+									transform: "perspective(1000px)",
+									transformStyle: "preserve-3d",
+									margin: "0.5rem 0",
 								}}
 							>
-								<FlowDiagram style={{ flexDirection: "column" }}>
-									<div
-										style={{
-											display: "flex",
-											justifyContent: "center",
-											width: "100%",
-										}}
-									>
-										<DiagramSection style={{ margin: "0 10px" }}>
-											<DiagramIcon>.sql</DiagramIcon>
-										</DiagramSection>
-
-										<DiagramSection style={{ margin: "0 10px" }}>
-											<DiagramIcon>.glb</DiagramIcon>
-										</DiagramSection>
-									</div>
-
-									<ConnectingLine
-										style={{ width: "2px", height: "20px", margin: "10px 0" }}
-									/>
-
-									<DiagramSection>
-										<DiagramIcon
-											style={{
-												borderRadius: "8px",
-												width: "90px",
-												height: "90px",
-											}}
-										>
-											<VircadiaIcon />
-										</DiagramIcon>
-										<DiagramLabel>Vircadia</DiagramLabel>
-									</DiagramSection>
-
-									<ConnectingLine
-										style={{ width: "2px", height: "20px", margin: "10px 0" }}
-									/>
-
-									<div
-										style={{
-											display: "flex",
-											justifyContent: "center",
-											width: "100%",
-										}}
-									>
-										<DiagramSection style={{ margin: "0 10px" }}>
-											<DiagramIcon>
-												<UnityIcon />
-											</DiagramIcon>
-											<DiagramLabel>Unity</DiagramLabel>
-										</DiagramSection>
-
-										<DiagramSection style={{ margin: "0 10px" }}>
-											<DiagramIcon>
-												<ChromeIcon />
-											</DiagramIcon>
-											<DiagramLabel>Web</DiagramLabel>
-										</DiagramSection>
-
-										<DiagramSection style={{ margin: "0 10px" }}>
-											<DiagramIcon>
-												<UnrealIcon />
-											</DiagramIcon>
-											<DiagramLabel>Unreal</DiagramLabel>
-										</DiagramSection>
-									</div>
-								</FlowDiagram>
+								<VircadiaFlow />
 							</div>
 						</FeatureContent>
 					</FeatureBox>
@@ -412,10 +580,10 @@ function FeaturesSection() {
 
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxTitle>Cross-Platform Realtime</FeatureBoxTitle>
+							<FeatureBoxTitle>No SDK? No Problem!</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								Entities synced in realtime across every platform: Unreal,
-								Unity, Web, Blender, and more.
+								Connect to the API via Websocket or HTTP, then interact with
+								Vircadia directly with your favorite SQL client.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
@@ -554,65 +722,12 @@ function SponsorsSection() {
 	);
 }
 
-// SVG Icons Components
-const SqlIcon = () => (
-	<svg
-		width="40"
-		height="40"
-		viewBox="0 0 24 24"
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		aria-labelledby="sqlIconTitle"
-	>
-		<title id="sqlIconTitle">SQL Database Icon</title>
-		<path
-			d="M5 4C2.8 4 1 5.8 1 8C1 9.4 1.6 10.6 2.6 11.5C1.6 12.3 1 13.6 1 15C1 17.2 2.8 19 5 19H20C21.1 19 22 18.1 22 17V6C22 4.9 21.1 4 20 4H5ZM5 6H13V8H5C4.4 8 4 7.6 4 7C4 6.4 4.4 6 5 6ZM5 10H13V17H5C3.9 17 3 16.1 3 15C3 13.9 3.9 13 5 13C3.9 13 3 12.1 3 11C3 10.4 3.4 10 4 10H5Z"
-			fill="#4472c4"
-		/>
-	</svg>
-);
-
-const GlbIcon = () => (
-	<svg
-		width="40"
-		height="40"
-		viewBox="0 0 24 24"
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		aria-labelledby="glbIconTitle"
-	>
-		<title id="glbIconTitle">GLB 3D Model Icon</title>
-		<path
-			d="M21 16.5C21 16.88 20.79 17.21 20.47 17.38L12.57 21.82C12.41 21.94 12.21 22 12 22C11.79 22 11.59 21.94 11.43 21.82L3.53 17.38C3.21 17.21 3 16.88 3 16.5V7.5C3 7.12 3.21 6.79 3.53 6.62L11.43 2.18C11.59 2.06 11.79 2 12 2C12.21 2 12.41 2.06 12.57 2.18L20.47 6.62C20.79 6.79 21 7.12 21 7.5V16.5Z"
-			fill="#7030a0"
-		/>
-		<path
-			d="M12 17L12 6.5"
-			stroke="white"
-			strokeWidth="1.5"
-			strokeLinecap="round"
-		/>
-		<path
-			d="M17 14L7 9"
-			stroke="white"
-			strokeWidth="1.5"
-			strokeLinecap="round"
-		/>
-		<path
-			d="M7 14L17 9"
-			stroke="white"
-			strokeWidth="1.5"
-			strokeLinecap="round"
-		/>
-	</svg>
-);
-
 const VircadiaIcon = () => (
 	<img src="img/icon.svg" alt="Vircadia Icon" width="60" height="60" />
 );
 
 const UnityIcon = () => (
-	<img
+	<ThemedSvgIcon
 		src="img/unity.svg"
 		alt="Unity Game Engine Icon"
 		width="40"
@@ -621,11 +736,21 @@ const UnityIcon = () => (
 );
 
 const ChromeIcon = () => (
-	<img src="img/chrome.svg" alt="Browser Icon" width="40" height="40" />
+	<ThemedSvgIcon
+		src="img/chrome.svg"
+		alt="Browser Icon"
+		width="40"
+		height="40"
+	/>
 );
 
 const UnrealIcon = () => (
-	<img src="img/unreal.svg" alt="Unreal Engine Icon" width="40" height="40" />
+	<ThemedSvgIcon
+		src="img/unreal.svg"
+		alt="Unreal Engine Icon"
+		width="40"
+		height="40"
+	/>
 );
 
 export default function Home(): ReactNode {
