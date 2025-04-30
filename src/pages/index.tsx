@@ -288,152 +288,235 @@ const SponsorLogo = styled.div`
 	}
 `;
 
+const SectionTitle = styled.h2`
+	text-align: center;
+	margin-bottom: 1.5rem;
+	font-size: 2rem;
+	background: linear-gradient(90deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-darker) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+`;
+
+const SectionDescription = styled.p`
+	text-align: center;
+	max-width: 800px;
+	margin: 0 auto 2rem;
+	color: var(--ifm-color-emphasis-700);
+`;
+
 function FeaturesSection() {
 	return (
-		<FeaturesContainer>
-			<Heading as="h2">Features</Heading>
-			<FeaturesGrid>
-				<FeatureBox $wide>
-					<FeatureContent>
-						<FeatureBoxIcon>⚙️</FeatureBoxIcon>
-						<FeatureBoxTitle>One CLI To Rule Them All</FeatureBoxTitle>
-						<FeatureBoxDescription>
-							The{" "}
-							<a href="/vircadia-world/cli/#quick-start">Vircadia World CLI</a>{" "}
-							provisions everything you need with simple commands - from
-							development to production deployments.
-						</FeatureBoxDescription>
-					</FeatureContent>
-				</FeatureBox>
+		<>
+			<FeaturesContainer>
+				<SectionTitle>Core Technology Features</SectionTitle>
+				<SectionDescription>
+					Powerful building blocks for creating immersive and scalable virtual
+					worlds
+				</SectionDescription>
+				<FeaturesGrid>
+					<FeatureBox $tall $wide>
+						<FeatureContent>
+							<FeatureBoxIcon>🔄</FeatureBoxIcon>
+							<FeatureBoxTitle>Unified Architecture</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								A complete platform that bridges 3D assets and data to multiple
+								runtime platforms.
+							</FeatureBoxDescription>
+							<div
+								style={{
+									transform: "scale(0.85)",
+									transformOrigin: "center",
+									margin: "-1rem 0",
+								}}
+							>
+								<FlowDiagram>
+									<DiagramSection>
+										<DiagramIcon>
+											<SqlIcon />
+										</DiagramIcon>
+										<DiagramLabel>.sql</DiagramLabel>
+									</DiagramSection>
 
-				<FeatureBox $tall $wide>
-					<FeatureContent>
-						<FeatureBoxIcon>🔄</FeatureBoxIcon>
-						<FeatureBoxTitle>Unified Architecture</FeatureBoxTitle>
-						<FeatureBoxDescription>
-							A complete platform that bridges 3D assets and data to multiple
-							runtime platforms.
-						</FeatureBoxDescription>
-						<div
-							style={{
-								transform: "scale(0.85)",
-								transformOrigin: "center",
-								margin: "-1rem 0",
-							}}
-						>
-							<FlowDiagram>
-								<DiagramSection>
-									<DiagramIcon>
-										<SqlIcon />
-									</DiagramIcon>
-									<DiagramLabel>.sql</DiagramLabel>
-								</DiagramSection>
+									<ConnectingLine />
 
-								<ConnectingLine />
+									<DiagramSection>
+										<DiagramIcon>
+											<GlbIcon />
+										</DiagramIcon>
+										<DiagramLabel>.glb</DiagramLabel>
+									</DiagramSection>
 
-								<DiagramSection>
-									<DiagramIcon>
-										<GlbIcon />
-									</DiagramIcon>
-									<DiagramLabel>.glb</DiagramLabel>
-								</DiagramSection>
+									<ConnectingLine />
 
-								<ConnectingLine />
+									<CenterIcon>
+										<VircadiaIcon />
+									</CenterIcon>
 
-								<CenterIcon>
-									<VircadiaIcon />
-								</CenterIcon>
+									<ConnectingLine />
 
-								<ConnectingLine />
+									<DiagramSection>
+										<DiagramIcon>
+											<UnityIcon />
+										</DiagramIcon>
+										<DiagramLabel>Unity</DiagramLabel>
+									</DiagramSection>
 
-								<DiagramSection>
-									<DiagramIcon>
-										<UnityIcon />
-									</DiagramIcon>
-									<DiagramLabel>Unity</DiagramLabel>
-								</DiagramSection>
+									<ConnectingLine />
 
-								<ConnectingLine />
+									<DiagramSection>
+										<DiagramIcon>
+											<ChromeIcon />
+										</DiagramIcon>
+										<DiagramLabel>Chrome</DiagramLabel>
+									</DiagramSection>
 
-								<DiagramSection>
-									<DiagramIcon>
-										<ChromeIcon />
-									</DiagramIcon>
-									<DiagramLabel>Chrome</DiagramLabel>
-								</DiagramSection>
+									<ConnectingLine />
 
-								<ConnectingLine />
+									<DiagramSection>
+										<DiagramIcon>
+											<UnrealIcon />
+										</DiagramIcon>
+										<DiagramLabel>Unreal</DiagramLabel>
+									</DiagramSection>
+								</FlowDiagram>
+							</div>
+						</FeatureContent>
+					</FeatureBox>
 
-								<DiagramSection>
-									<DiagramIcon>
-										<UnrealIcon />
-									</DiagramIcon>
-									<DiagramLabel>Unreal</DiagramLabel>
-								</DiagramSection>
-							</FlowDiagram>
-						</div>
-					</FeatureContent>
-				</FeatureBox>
+					<FeatureBox>
+						<FeatureContent>
+							<FeatureBoxIcon>🗄️</FeatureBoxIcon>
+							<FeatureBoxTitle>PostgreSQL-Powered Worlds</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								Define your entire world in SQL with enterprise database
+								features: transactions, rollbacks, triggers, sub-ms functions,
+								and more, all natively within your game.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
 
-				<FeatureBox>
-					<FeatureContent>
-						<FeatureBoxIcon>🏢</FeatureBoxIcon>
-						<FeatureBoxTitle>OSS for Enterprise</FeatureBoxTitle>
-						<FeatureBoxDescription>
-							Apache 2.0 licensed, providing legal certainty and flexibility for
-							commercial use, modification, and distribution at any scale.
-						</FeatureBoxDescription>
-					</FeatureContent>
-				</FeatureBox>
+					<FeatureBox>
+						<FeatureContent>
+							<FeatureBoxIcon>📝</FeatureBoxIcon>
+							<FeatureBoxTitle>Powerful Scripting</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								Gameplay functionality executed in user scripts, while
+								administrative and management tasks are handled through agent
+								scripts - providing flexibility and security.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
 
-				<FeatureBox $wide>
-					<FeatureContent>
-						<FeatureBoxIcon>🚀</FeatureBoxIcon>
-						<FeatureBoxTitle>Enterprise-Grade Scalability</FeatureBoxTitle>
-						<FeatureBoxDescription>
-							Scale to millions of players and objects with millisecond latency,
-							powered by PostgreSQL, Bun.sh, and Docker. Suitable for
-							competitive and casual gaming, from FPS to MMOs, across mobile and
-							XR platforms.
-						</FeatureBoxDescription>
-					</FeatureContent>
-				</FeatureBox>
+					<FeatureBox>
+						<FeatureContent>
+							<FeatureBoxIcon>⚡</FeatureBoxIcon>
+							<FeatureBoxTitle>World Tick Manager</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								High-performance server-side tracking of all entity and asset
+								states to assist in anti-cheat, competitive gaming, and general
+								gameplay maintenance.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
 
-				<FeatureBox>
-					<FeatureContent>
-						<FeatureBoxIcon>🐳</FeatureBoxIcon>
-						<FeatureBoxTitle>AAAA Scalability via Docker</FeatureBoxTitle>
-						<FeatureBoxDescription>
-							Containerized deployment enables Anywhere, Anytime, Any scale, Any
-							device accessibility with consistent performance and reliability.
-						</FeatureBoxDescription>
-					</FeatureContent>
-				</FeatureBox>
+					<FeatureBox>
+						<FeatureContent>
+							<FeatureBoxIcon>🔄</FeatureBoxIcon>
+							<FeatureBoxTitle>Cross-Platform Realtime</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								Entities are shared between all clients in realtime across
+								multiple platforms: Unreal, Unity, Web, Blender, and more -
+								build once, deploy everywhere.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
+				</FeaturesGrid>
+			</FeaturesContainer>
 
-				<FeatureBox>
-					<FeatureContent>
-						<FeatureBoxIcon>📈</FeatureBoxIcon>
-						<FeatureBoxTitle>Simple Start, Advanced Scale</FeatureBoxTitle>
-						<FeatureBoxDescription>
-							Easy onboarding for beginners, with powerful tools and
-							capabilities for advanced users and enterprise deployments. Grows
-							with your needs.
-						</FeatureBoxDescription>
-					</FeatureContent>
-				</FeatureBox>
+			<FeaturesContainer>
+				<SectionTitle>Enterprise & Deployment Features</SectionTitle>
+				<SectionDescription>
+					Scale from prototype to production with enterprise-grade tools and
+					infrastructure
+				</SectionDescription>
+				<FeaturesGrid>
+					<FeatureBox>
+						<FeatureContent>
+							<FeatureBoxIcon>⚙️</FeatureBoxIcon>
+							<FeatureBoxTitle>One CLI To Rule Them All</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								The{" "}
+								<a href="/vircadia-world/cli/#quick-start">
+									Vircadia World CLI
+								</a>{" "}
+								provisions everything you need with simple commands - from
+								development to production deployments.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
 
-				<FeatureBox>
-					<FeatureContent>
-						<FeatureBoxIcon>🧪</FeatureBoxIcon>
-						<FeatureBoxTitle>Robust CI/CD Pipeline</FeatureBoxTitle>
-						<FeatureBoxDescription>
-							Every component thoroughly tested with comprehensive CI pipelines
-							ensuring stability and reliability across the entire system.
-						</FeatureBoxDescription>
-					</FeatureContent>
-				</FeatureBox>
-			</FeaturesGrid>
-		</FeaturesContainer>
+					<FeatureBox>
+						<FeatureContent>
+							<FeatureBoxIcon>🏢</FeatureBoxIcon>
+							<FeatureBoxTitle>OSS for Enterprise</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								Apache 2.0 licensed, providing legal certainty and flexibility
+								for commercial use, modification, and distribution at any scale.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
+
+					<FeatureBox $wide>
+						<FeatureContent>
+							<FeatureBoxIcon>🚀</FeatureBoxIcon>
+							<FeatureBoxTitle>Enterprise-Grade Scalability</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								Scale to millions of players and objects with millisecond
+								latency, powered by PostgreSQL, Bun.sh, and Docker. Suitable for
+								competitive and casual gaming, from FPS to MMOs, across mobile
+								and XR platforms.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
+
+					<FeatureBox>
+						<FeatureContent>
+							<FeatureBoxIcon>🔒</FeatureBoxIcon>
+							<FeatureBoxTitle>Enterprise Security</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								OAuth 2.0 authentication with no passwords, validated by
+								partners like T-Systems, UA92, and more for secure access
+								management at scale.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
+
+					<FeatureBox>
+						<FeatureContent>
+							<FeatureBoxIcon>🐳</FeatureBoxIcon>
+							<FeatureBoxTitle>AAAA Scalability via Docker</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								Containerized deployment enables Anywhere, Anytime, Any scale,
+								Any device accessibility with consistent performance and
+								reliability.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
+
+					<FeatureBox>
+						<FeatureContent>
+							<FeatureBoxIcon>🧪</FeatureBoxIcon>
+							<FeatureBoxTitle>Robust CI/CD Pipeline</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								Every component thoroughly tested with comprehensive CI
+								pipelines ensuring stability and reliability across the entire
+								system.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
+				</FeaturesGrid>
+			</FeaturesContainer>
+		</>
 	);
 }
 
