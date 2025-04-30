@@ -70,8 +70,8 @@ const FeatureBoxIcon = styled.div`
 
 interface FeatureBoxProps {
 	children: ReactNode;
-	tall?: boolean;
-	wide?: boolean;
+	$tall?: boolean;
+	$wide?: boolean;
 	bgColor?: string;
 	className?: string;
 }
@@ -79,7 +79,7 @@ interface FeatureBoxProps {
 // Feature component with variable size support
 const FeatureBox = styled(FeatureBoxBase)<FeatureBoxProps>`
 	${(props) =>
-		props.tall &&
+		props.$tall &&
 		`
 		grid-row: span 2;
 		
@@ -89,7 +89,7 @@ const FeatureBox = styled(FeatureBoxBase)<FeatureBoxProps>`
 	`}
 	
 	${(props) =>
-		props.wide &&
+		props.$wide &&
 		`
 		grid-column: span 2;
 		
@@ -293,7 +293,7 @@ function FeaturesSection() {
 		<FeaturesContainer>
 			<Heading as="h2">Features</Heading>
 			<FeaturesGrid>
-				<FeatureBox wide>
+				<FeatureBox $wide>
 					<FeatureContent>
 						<FeatureBoxIcon>⚙️</FeatureBoxIcon>
 						<FeatureBoxTitle>One CLI To Rule Them All</FeatureBoxTitle>
@@ -306,7 +306,7 @@ function FeaturesSection() {
 					</FeatureContent>
 				</FeatureBox>
 
-				<FeatureBox tall wide>
+				<FeatureBox $tall $wide>
 					<FeatureContent>
 						<FeatureBoxIcon>🔄</FeatureBoxIcon>
 						<FeatureBoxTitle>Unified Architecture</FeatureBoxTitle>
@@ -386,7 +386,7 @@ function FeaturesSection() {
 					</FeatureContent>
 				</FeatureBox>
 
-				<FeatureBox wide>
+				<FeatureBox $wide>
 					<FeatureContent>
 						<FeatureBoxIcon>🚀</FeatureBoxIcon>
 						<FeatureBoxTitle>Enterprise-Grade Scalability</FeatureBoxTitle>

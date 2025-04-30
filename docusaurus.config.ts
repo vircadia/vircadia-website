@@ -31,6 +31,32 @@ const config: Config = {
 		locales: ["en"],
 	},
 
+	// Add the Google Fonts embed code
+	headTags: [
+		{
+			tagName: "link",
+			attributes: {
+				rel: "preconnect",
+				href: "https://fonts.googleapis.com",
+			},
+		},
+		{
+			tagName: "link",
+			attributes: {
+				rel: "preconnect",
+				href: "https://fonts.gstatic.com",
+				crossorigin: "anonymous",
+			},
+		},
+		{
+			tagName: "link",
+			attributes: {
+				rel: "stylesheet",
+				href: "https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap",
+			},
+		},
+	],
+
 	presets: [
 		[
 			"classic",
@@ -97,7 +123,7 @@ const config: Config = {
 			],
 		},
 		footer: {
-			style: "light",
+			// style: "light",
 			// links: [
 			// 	{
 			// 		title: "Community",
