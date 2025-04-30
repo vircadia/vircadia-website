@@ -65,16 +65,10 @@ const config: Config = {
 					sidebarPath: "./sidebars.ts",
 					path: "docs/vircadia-world/",
 					routeBasePath: "vircadia-world",
-					exclude: [
-						"cli/vircadia-world-sdk-ts/**",
-						"client/web_babylon_js/volume/vircadia-world-sdk-ts/**",
-						"server/service/api/volume/vircadia-world-sdk-ts/**",
-						"server/service/tick/volume/vircadia-world-sdk-ts/**",
-					],
+					exclude: [],
 					// Please change this to your repo.
 					// Remove this to remove the "edit this page" links.
-					editUrl:
-						"https://github.com/Vircadia/vircadia-website/tree/master/docs/vircadia-world/",
+					editUrl: "https://github.com/Vircadia/vircadia-world/",
 				},
 				blog: {
 					showReadingTime: true,
@@ -82,10 +76,6 @@ const config: Config = {
 						type: ["rss", "atom"],
 						xslt: true,
 					},
-					// Please change this to your repo.
-					// Remove this to remove the "edit this page" links.
-					editUrl:
-						"https://github.com/Vircadia/vircadia-website/tree/master/blog/",
 					// Useful options to enforce blogging best practices
 					onInlineTags: "warn",
 					onInlineAuthors: "warn",

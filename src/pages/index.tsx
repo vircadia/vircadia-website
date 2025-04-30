@@ -65,6 +65,30 @@ const FeatureBoxDescription = styled.p`
 	line-height: 1.6;
 `;
 
+const AnimatedEmoji = styled.div`
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
+	animation: glow 2s infinite ease-in-out;
+	
+	@keyframes glow {
+		0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.7); }
+		50% { text-shadow: 0 0 15px rgba(255, 215, 0, 1), 0 0 20px rgba(255, 165, 0, 0.8); }
+		100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.7); }
+	}
+`;
+
+const AnimatedSwordsEmoji = styled.div`
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
+	// animation: swordsGlow 2s infinite ease-in-out;
+	
+	// @keyframes swordsGlow {
+	// 	0% { text-shadow: 0 0 5px rgba(70, 130, 180, 0.7); }
+	// 	50% { text-shadow: 0 0 15px rgba(70, 130, 180, 1), 0 0 20px rgba(0, 191, 255, 0.8); }
+	// 	100% { text-shadow: 0 0 5px rgba(70, 130, 180, 0.7); }
+	// }
+`;
+
 interface FeatureBoxProps {
 	children: ReactNode;
 	$tall?: boolean;
@@ -151,10 +175,22 @@ const ReactFlowContainer = styled.div`
 	width: 100%;
 	height: 300px;
 	margin: 1rem 0;
+	position: relative;
+	user-select: none;
 	
 	@media (max-width: 768px) {
 		height: 400px;
 	}
+`;
+
+const ReactFlowOverlay = styled.div`
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 10;
+	cursor: default;
 `;
 
 const NodeContent = styled.div`
@@ -519,6 +555,9 @@ function VircadiaFlow() {
 					zoomOnDoubleClick={false}
 					panOnScroll={false}
 					panOnDrag={false}
+					nodesDraggable={false}
+					nodesConnectable={false}
+					elementsSelectable={false}
 					proOptions={{
 						hideAttribution: true,
 					}}
@@ -527,7 +566,9 @@ function VircadiaFlow() {
 						stroke: "var(--ifm-color-primary)",
 						strokeWidth: 2,
 					}}
-				></ReactFlow>
+					style={{ pointerEvents: "none" }}
+				/>
+				<ReactFlowOverlay />
 			</ReactFlowContainer>
 		</ReactFlowProvider>
 	);
@@ -559,6 +600,7 @@ function FeaturesSection() {
 
 					<FeatureBox $wide>
 						<FeatureContent>
+							<AnimatedEmoji>⚡</AnimatedEmoji>
 							<FeatureBoxTitle>PostgreSQL-Powered Worlds</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Define your entire world in SQL with enterprise database
@@ -570,6 +612,7 @@ function FeaturesSection() {
 
 					<FeatureBox>
 						<FeatureContent>
+							<AnimatedSwordsEmoji>⚔️</AnimatedSwordsEmoji>
 							<FeatureBoxTitle>Realtime State Tracking</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								High-performance server-side tracking of all entity states to
@@ -580,6 +623,7 @@ function FeaturesSection() {
 
 					<FeatureBox>
 						<FeatureContent>
+							<div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🔌</div>
 							<FeatureBoxTitle>No SDK? No Problem!</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Connect to the API via Websocket or HTTP, then interact with
@@ -599,14 +643,15 @@ function FeaturesSection() {
 				<FeaturesGrid>
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxTitle>One CLI To Rule Them All</FeatureBoxTitle>
+							<FeatureBoxTitle>Developer-First Infrastructure</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								The{" "}
 								<a href="/vircadia-world/cli/#quick-start">
 									Vircadia World CLI
 								</a>{" "}
-								provisions everything you need with simple commands - from
-								development to production deployments.
+								provisions everything from development to production, backed by
+								comprehensive CI pipelines ensuring stability and reliability
+								across the entire system.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
@@ -626,9 +671,10 @@ function FeaturesSection() {
 							<FeatureBoxTitle>Enterprise-Grade Scalability</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Scale to millions of players and objects with millisecond
-								latency, powered by PostgreSQL, Bun.sh, and Docker. Suitable for
-								competitive and casual gaming, from FPS to MMOs, across mobile
-								and XR platforms.
+								latency, powered by PostgreSQL, Bun.sh, and Docker.
+								Containerized deployment enables Anywhere, Anytime, Any scale,
+								Any device accessibility with consistent performance and
+								reliability.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
@@ -640,28 +686,6 @@ function FeaturesSection() {
 								OAuth 2.0 authentication with no passwords, validated by
 								partners like Deutsche Telekom, Manchester United, and more for
 								secure access management at scale.
-							</FeatureBoxDescription>
-						</FeatureContent>
-					</FeatureBox>
-
-					<FeatureBox>
-						<FeatureContent>
-							<FeatureBoxTitle>AAAA Scalability via Docker</FeatureBoxTitle>
-							<FeatureBoxDescription>
-								Containerized deployment enables Anywhere, Anytime, Any scale,
-								Any device accessibility with consistent performance and
-								reliability.
-							</FeatureBoxDescription>
-						</FeatureContent>
-					</FeatureBox>
-
-					<FeatureBox>
-						<FeatureContent>
-							<FeatureBoxTitle>Robust CI/CD Pipeline</FeatureBoxTitle>
-							<FeatureBoxDescription>
-								Every component thoroughly tested with comprehensive CI
-								pipelines ensuring stability and reliability across the entire
-								system.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
@@ -722,36 +746,121 @@ function SponsorsSection() {
 	);
 }
 
-const VircadiaIcon = () => (
-	<img src="img/icon.svg" alt="Vircadia Icon" width="60" height="60" />
-);
+// Add these styled components for the Bottom CTA section
+const BottomCTAContainer = styled.section`
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+	background: var(--ifm-background-color);
+	color: var(--ifm-font-color-base);
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+`;
 
-const UnityIcon = () => (
-	<ThemedSvgIcon
-		src="img/unity.svg"
-		alt="Unity Game Engine Icon"
-		width="40"
-		height="40"
-	/>
-);
+const BottomCTAOverlay = styled.div`
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: radial-gradient(circle at center, transparent 0%, var(--ifm-color-emphasis-100) 100%);
+	z-index: 1;
+`;
 
-const ChromeIcon = () => (
-	<ThemedSvgIcon
-		src="img/chrome.svg"
-		alt="Browser Icon"
-		width="40"
-		height="40"
-	/>
-);
+const BottomCTAContent = styled.div`
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+`;
 
-const UnrealIcon = () => (
-	<ThemedSvgIcon
-		src="img/unreal.svg"
-		alt="Unreal Engine Icon"
-		width="40"
-		height="40"
-	/>
-);
+const BottomCTATitle = styled.h2`
+	font-size: 3.5rem;
+	font-weight: bold;
+	margin-bottom: 1.5rem;
+	background: linear-gradient(90deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-dark) 50%, var(--ifm-color-primary-darker) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	
+	@media (max-width: 768px) {
+		font-size: 2.5rem;
+	}
+`;
+
+const BottomCTADescription = styled.p`
+	font-size: 1.5rem;
+	max-width: 800px;
+	margin: 0 auto 2.5rem;
+	color: var(--ifm-color-emphasis-700);
+	
+	@media (max-width: 768px) {
+		font-size: 1.2rem;
+	}
+`;
+
+const BottomCTAButtonContainer = styled.div`
+	display: flex;
+	gap: 1.5rem;
+	justify-content: center;
+	flex-wrap: wrap;
+`;
+
+const IconWrapper = styled.div`
+	margin-bottom: 1.5rem;
+	filter: drop-shadow(0 0 15px rgba(var(--ifm-color-primary-rgb), 0.4));
+	animation: pulseIcon 3s infinite ease-in-out;
+	
+	@keyframes pulseIcon {
+		0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(var(--ifm-color-primary-rgb), 0.4)); }
+		50% { transform: scale(1.1); filter: drop-shadow(0 0 20px rgba(var(--ifm-color-primary-rgb), 0.6)); }
+		100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(var(--ifm-color-primary-rgb), 0.4)); }
+	}
+	
+	img {
+		height: 80px;
+		width: 80px;
+	}
+`;
+
+function BottomCTASection() {
+	const { siteConfig } = useDocusaurusContext();
+	return (
+		<BottomCTAContainer>
+			<BottomCTAOverlay />
+			<BottomCTAContent>
+				<IconWrapper>
+					<img src="img/icon.svg" alt="Vircadia Icon" />
+				</IconWrapper>
+				<BottomCTATitle>Ready to Build Your Virtual World?</BottomCTATitle>
+				<BottomCTADescription>
+					Join thousands of developers creating immersive experiences with
+					Vircadia today.
+				</BottomCTADescription>
+				<BottomCTAButtonContainer>
+					<Link
+						className="button button--primary button--lg"
+						to="/vircadia-world/cli/#quick-start"
+					>
+						Get Started
+					</Link>
+					<Link
+						className="button button--secondary button--lg"
+						to={`https://github.com/${siteConfig.organizationName}/${siteConfig.projectName}`}
+					>
+						Star on GitHub
+					</Link>
+				</BottomCTAButtonContainer>
+			</BottomCTAContent>
+		</BottomCTAContainer>
+	);
+}
 
 export default function Home(): ReactNode {
 	const { siteConfig } = useDocusaurusContext();
@@ -760,7 +869,7 @@ export default function Home(): ReactNode {
 	useEffect(() => {
 		if (typedElementRef.current) {
 			const typed = new Typed(typedElementRef.current, {
-				strings: ["items", "players", "assets", "everything."],
+				strings: ["game items", "players", "models", "games."],
 				typeSpeed: 80,
 				backSpeed: 50,
 				backDelay: 5000,
@@ -781,13 +890,13 @@ export default function Home(): ReactNode {
 			<HeroContainer>
 				<HeroContent>
 					<HeroTitle>
-						Vircadia is the fast game
+						Vircadia is the
 						<br />
 						reactivity layer for
 						<br />
-						/&nbsp;
+						{/* biome-ignore lint/suspicious/noCommentText: it's not a comment*/}
+						//&nbsp;
 						<HeroTypedTitle ref={typedElementRef} />
-						&nbsp;/
 					</HeroTitle>
 					{/* <HeroSubtitle>Apache 2.0 licensed, production ready.</HeroSubtitle> */}
 					<ButtonContainer>
@@ -797,18 +906,13 @@ export default function Home(): ReactNode {
 						>
 							Get Started
 						</Link>
-						<Link
-							className="button button--secondary button--lg"
-							to="https://github.com/vircadia"
-						>
-							GitHub
-						</Link>
 					</ButtonContainer>
 				</HeroContent>
 			</HeroContainer>
 			<main>
 				<FeaturesSection />
 				<SponsorsSection />
+				<BottomCTASection />
 			</main>
 		</Layout>
 	);
