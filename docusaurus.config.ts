@@ -6,7 +6,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
 	title: "Vircadia",
-	tagline: "Worlds made easy.",
+	tagline: "Reactivity layer for games.",
 	favicon: "img/favicon.ico",
 
 	// Set the production url of your site here
@@ -78,7 +78,7 @@ const config: Config = {
 		navbar: {
 			title: "Vircadia",
 			logo: {
-				alt: "Vircadia Logo",
+				alt: "Vircadia Icon",
 				src: "img/icon.svg",
 			},
 			items: [
@@ -97,31 +97,31 @@ const config: Config = {
 			],
 		},
 		footer: {
-			style: "dark",
-			links: [
-				{
-					title: "Community",
-					items: [
-						{
-							label: "Discord",
-							href: "https://discordapp.com/invite/Pvx2vke",
-						},
-						{
-							label: "X",
-							href: "https://x.com/vircadia",
-						},
-					],
-				},
-				{
-					title: "Code",
-					items: [
-						{
-							label: "GitHub",
-							href: "https://github.com/vircadia/",
-						},
-					],
-				},
-			],
+			style: "light",
+			// links: [
+			// 	{
+			// 		title: "Community",
+			// 		items: [
+			// 			{
+			// 				label: "Discord",
+			// 				href: "https://discordapp.com/invite/Pvx2vke",
+			// 			},
+			// 			{
+			// 				label: "X",
+			// 				href: "https://x.com/vircadia",
+			// 			},
+			// 		],
+			// 	},
+			// 	{
+			// 		title: "Code",
+			// 		items: [
+			// 			{
+			// 				label: "GitHub",
+			// 				href: "https://github.com/vircadia/",
+			// 			},
+			// 		],
+			// 	},
+			// ],
 			copyright: `Copyright © ${new Date().getFullYear()} Vircadia`,
 		},
 		announcementBar: {
