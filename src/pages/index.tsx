@@ -682,12 +682,26 @@ function FeaturesSection() {
 						</FeatureContent>
 					</FeatureBox>
 
+					<FeatureBox $wide>
+						<FeatureContent>
+							<div style={{ textAlign: "center", marginBottom: "1rem" }}>
+								<img src="/img/asf.svg" alt="Apache Software Foundation Logo" style={{ height: "60px" }} />
+							</div>
+							<FeatureBoxTitle>Permissively Licensed (FOSS)</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								Vircadia is Apache 2.0 licensed, providing legal certainty and flexibility
+								for commercial use, modification, and distribution at any scale.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
+
 					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxTitle>OSS for Enterprise</FeatureBoxTitle>
+							<FeatureBoxTitle>Enterprise Security</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								Apache 2.0 licensed, providing legal certainty and flexibility
-								for commercial use, modification, and distribution at any scale.
+								OAuth 2.0 authentication with no passwords, validated by
+								partners like Deutsche Telekom, Manchester United, and more for
+								secure access management at scale.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
@@ -696,7 +710,7 @@ function FeaturesSection() {
 						<FeatureContent>
 							<FeatureBoxTitle>Enterprise-Grade Scalability</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								Scale to millions of players and objects with millisecond
+								Scale to millions of objects and players with millisecond
 								latency, powered by PostgreSQL, Bun.sh, and Docker.
 								Containerized deployment enables Anywhere, Anytime, Any scale,
 								Any device accessibility with consistent performance and
@@ -715,17 +729,6 @@ function FeaturesSection() {
 								</TechLogoBox>
 								<EmptyBox />
 							</LogoGrid>
-						</FeatureContent>
-					</FeatureBox>
-
-					<FeatureBox>
-						<FeatureContent>
-							<FeatureBoxTitle>Enterprise Security</FeatureBoxTitle>
-							<FeatureBoxDescription>
-								OAuth 2.0 authentication with no passwords, validated by
-								partners like Deutsche Telekom, Manchester United, and more for
-								secure access management at scale.
-							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
 				</FeaturesGrid>
@@ -792,6 +795,9 @@ function SponsorsSection() {
 				</SponsorLogo>
 				<SponsorLogo $grayscale $adjustContrast>
 					<img src="/img/partner/webaverse.webp" alt="Webaverse" />
+				</SponsorLogo>
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/iiinno.webp" alt="iiiNNO" />
 				</SponsorLogo>
 			</SponsorGrid>
 		</SponsorContainer>
@@ -1010,10 +1016,10 @@ const TechLogoBox = styled.div<{ $color?: string }>`
 	justify-content: center;
 	padding: 1rem;
 	position: relative;
-	box-shadow: ${props => props.$color ? `0 4px 15px ${props.$color}` : '0 4px 12px rgba(0, 0, 0, 0.15)'};
+	box-shadow: ${props => props.$color ? `0 8px 15px ${props.$color}` : '0 8px 12px rgba(0, 0, 0, 0.15)'};
 	
 	&:hover {
-		box-shadow: ${props => props.$color ? `0 8px 30px ${props.$color}` : '0 8px 24px rgba(0, 0, 0, 0.2)'};
+		box-shadow: ${props => props.$color ? `0 12px 25px ${props.$color}` : '0 12px 20px rgba(0, 0, 0, 0.2)'};
 	}
 	
 	&:before {
@@ -1021,8 +1027,8 @@ const TechLogoBox = styled.div<{ $color?: string }>`
 		position: absolute;
 		left: -15px;
 		right: -15px;
-		bottom: -15px;
-		top: -15px;
+		bottom: -20px;
+		top: 20px;
 		background: ${props => props.$color || 'rgba(0,0,0,0.1)'};
 		filter: blur(20px);
 		border-radius: 16px;
