@@ -720,6 +720,19 @@ function FeaturesSection() {
 								Any device accessibility with consistent performance and
 								reliability.
 							</FeatureBoxDescription>
+							<LogoGrid>
+								<EmptyBox />
+								<TechLogoBox $color="rgba(51, 103, 145, 0.8)">
+									<img src="/img/infra/postgresql.svg" alt="PostgreSQL" />
+								</TechLogoBox>
+								<TechLogoBox $color="rgba(251, 219, 101, 0.8)">
+									<img src="/img/infra/bun.svg" alt="Bun.sh" />
+								</TechLogoBox>
+								<TechLogoBox $color="rgba(52, 132, 250, 0.8)">
+									<img src="/img/infra/docker.svg" alt="Docker" />
+								</TechLogoBox>
+								<EmptyBox />
+							</LogoGrid>
 						</FeatureContent>
 					</FeatureBox>
 
@@ -895,10 +908,9 @@ function BottomCTASection() {
 				<IconWrapper>
 					<img src="img/icon.svg" alt="Vircadia Icon" />
 				</IconWrapper>
-				<BottomCTATitle>Ready to Build Your Virtual World?</BottomCTATitle>
+				<BottomCTATitle>Start building with Vircadia</BottomCTATitle>
 				<BottomCTADescription>
-					Join thousands of developers creating immersive experiences with
-					Vircadia today.
+					Develop games at the speed of thought.
 				</BottomCTADescription>
 				<BottomCTAButtonContainer>
 					<Link
@@ -990,3 +1002,73 @@ export default function Home(): ReactNode {
 		</Layout>
 	);
 }
+
+const LogoGrid = styled.div`
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 1rem;
+	margin-top: 1.5rem;
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+	
+	@media (max-width: 768px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+`;
+
+const TechLogoBox = styled.div<{ $color?: string }>`
+	background-color: var(--ifm-card-background-color);
+	border-radius: 8px;
+	overflow: visible;
+	transition: transform 0.3s ease;
+	aspect-ratio: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+	position: relative;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	
+	${(props) =>
+		props.$color &&
+		`
+		&:after {
+			content: '';
+			position: absolute;
+			left: -10px;
+			right: -10px;
+			bottom: -20px;
+			height: 50px;
+			background: ${props.$color};
+			filter: blur(25px);
+			border-radius: 40%;
+			z-index: -1;
+			opacity: 0.7;
+			transition: opacity 0.3s ease;
+		}
+		
+		&:hover:after {
+			opacity: 0.9;
+		}
+	`}
+	
+	&:hover {
+		transform: translateY(-5px);
+	}
+	
+	img {
+		width: 60%;
+		height: 60%;
+		object-fit: contain;
+		position: relative;
+		z-index: 2;
+	}
+`;
+
+const EmptyBox = styled(TechLogoBox)`
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	&:hover {
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	}
+`;
