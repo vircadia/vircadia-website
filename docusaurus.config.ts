@@ -68,7 +68,10 @@ const config: Config = {
 					exclude: ["**/vircadia-world-sdk-py/**"],
 					// Please change this to your repo.
 					// Remove this to remove the "edit this page" links.
-					editUrl: "https://github.com/Vircadia/vircadia-world/",
+					editUrl: ({docPath}) => {
+						// Remove 'docs/' from the path if present
+						return `https://github.com/Vircadia/vircadia-world/edit/master/${docPath}`;
+					},
 				},
 				blog: {
 					showReadingTime: true,
