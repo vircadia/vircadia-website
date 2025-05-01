@@ -37,11 +37,6 @@ const FeatureBoxBase = styled.div`
 	background-color: var(--ifm-card-background-color);
 	border: 1px solid var(--ifm-color-emphasis-200);
 	
-	&:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-	}
-	
 	@media (max-width: 768px) {
 		grid-row: auto !important;
 		grid-column: auto !important;
@@ -202,15 +197,9 @@ const NodeContent = styled.div`
 	border-radius: 8px;
 	padding: 10px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-	transition: all 0.3s ease;
 	position: relative;
 	width: 100%;
 	height: 100%;
-	
-	&:hover {
-		box-shadow: 0 0 15px 2px var(--ifm-color-primary-light);
-		transform: scale(1.05);
-	}
 `;
 
 const IconContainer = styled.div`
@@ -378,13 +367,6 @@ const StyledHandle = styled(Handle)`
 	height: 8px;
 	background-color: var(--ifm-color-primary);
 	border: 2px solid var(--ifm-card-background-color);
-	transition: all 0.2s ease;
-	
-	&:hover {
-		width: 10px;
-		height: 10px;
-		filter: drop-shadow(0 0 5px var(--ifm-color-primary));
-	}
 `;
 
 // Add a new styled component for themed SVGs
@@ -1021,40 +1003,44 @@ const TechLogoBox = styled.div<{ $color?: string }>`
 	background-color: var(--ifm-card-background-color);
 	border-radius: 8px;
 	overflow: visible;
-	transition: transform 0.3s ease;
+	transition: box-shadow 0.3s ease;
 	aspect-ratio: 1;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	padding: 1rem;
 	position: relative;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-	
-	${(props) =>
-		props.$color &&
-		`
-		&:after {
-			content: '';
-			position: absolute;
-			left: -10px;
-			right: -10px;
-			bottom: -20px;
-			height: 50px;
-			background: ${props.$color};
-			filter: blur(25px);
-			border-radius: 40%;
-			z-index: -1;
-			opacity: 0.7;
-			transition: opacity 0.3s ease;
-		}
-		
-		&:hover:after {
-			opacity: 0.9;
-		}
-	`}
+	box-shadow: ${props => props.$color ? `0 4px 15px ${props.$color}` : '0 4px 12px rgba(0, 0, 0, 0.15)'};
 	
 	&:hover {
-		transform: translateY(-5px);
+		box-shadow: ${props => props.$color ? `0 8px 30px ${props.$color}` : '0 8px 24px rgba(0, 0, 0, 0.2)'};
+	}
+	
+	&:before {
+		content: '';
+		position: absolute;
+		left: -15px;
+		right: -15px;
+		bottom: -15px;
+		top: -15px;
+		background: ${props => props.$color || 'rgba(0,0,0,0.1)'};
+		filter: blur(20px);
+		border-radius: 16px;
+		z-index: -1;
+		opacity: ${props => props.$color ? 0.5 : 0.05};
+		animation: ${props => props.$color ? 'coloredGlow' : 'subtleGlow'} 3s infinite ease-in-out;
+	}
+	
+	@keyframes coloredGlow {
+		0% { opacity: 0.4; filter: blur(18px); transform: scale(0.95); }
+		50% { opacity: 0.7; filter: blur(22px); transform: scale(1.05); }
+		100% { opacity: 0.4; filter: blur(18px); transform: scale(0.95); }
+	}
+	
+	@keyframes subtleGlow {
+		0% { opacity: 0.05; filter: blur(20px); }
+		50% { opacity: 0.1; filter: blur(25px); }
+		100% { opacity: 0.05; filter: blur(20px); }
 	}
 	
 	img {
@@ -1067,8 +1053,9 @@ const TechLogoBox = styled.div<{ $color?: string }>`
 `;
 
 const EmptyBox = styled(TechLogoBox)`
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-	&:hover {
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	background-color: var(--ifm-card-background-color);
+	
+	@media (max-width: 768px) {
+		display: none;
 	}
 `;
