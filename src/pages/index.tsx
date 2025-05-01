@@ -5,6 +5,7 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import styled from "styled-components";
+import CodeBlock from '@theme/CodeBlock';
 import type { Node as FlowNode, Edge } from "@xyflow/react";
 import { ReactFlow, Position, ReactFlowProvider, Handle } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
@@ -22,6 +23,10 @@ const FeaturesGrid = styled.div`
 	gap: 1.5rem;
 	margin-top: 2rem;
 	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	
 	@media (max-width: 768px) {
 		grid-template-columns: 1fr;
 	}
@@ -36,6 +41,11 @@ const FeatureBoxBase = styled.div`
 	flex-direction: column;
 	background-color: var(--ifm-card-background-color);
 	border: 1px solid var(--ifm-color-emphasis-200);
+	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		grid-row: auto !important;
+		max-height: none !important;
+	}
 	
 	@media (max-width: 768px) {
 		grid-row: auto !important;
@@ -99,6 +109,10 @@ const FeatureBox = styled(FeatureBoxBase)<FeatureBoxProps>`
 		`
 		grid-row: span 2;
 		
+		@media (min-width: 769px) and (max-width: 1024px) {
+			grid-row: auto;
+		}
+		
 		@media (max-width: 768px) {
 			grid-row: auto;
 		}
@@ -108,6 +122,10 @@ const FeatureBox = styled(FeatureBoxBase)<FeatureBoxProps>`
 		props.$wide &&
 		`
 		grid-column: span 2;
+		
+		@media (min-width: 769px) and (max-width: 1024px) {
+			grid-column: span 1;
+		}
 		
 		@media (max-width: 768px) {
 			grid-column: auto;
@@ -123,6 +141,10 @@ const HeroContainer = styled.header`
 	background: linear-gradient(135deg, var(--ifm-background-color) 0%, var(--ifm-color-emphasis-200) 100%);
 	overflow: hidden;
 	position: relative;
+	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		padding: 3rem 1.5rem;
+	}
 `;
 
 const HeroContent = styled.div`
@@ -139,6 +161,10 @@ const HeroTitle = styled.h1`
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		font-size: 2.5rem;
+	}
+	
 	@media (max-width: 768px) {
 		font-size: 2.2rem;
 	}
@@ -150,6 +176,10 @@ const HeroTypedTitle = styled.span`
 	background: linear-gradient(90deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-dark) 50%, var(--ifm-color-primary-darker) 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
+	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		font-size: 2.5rem;
+	}
 	
 	@media (max-width: 768px) {
 		font-size: 2.2rem;
@@ -172,6 +202,10 @@ const ReactFlowContainer = styled.div`
 	margin: 1rem 0;
 	position: relative;
 	user-select: none;
+	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		height: 350px;
+	}
 	
 	@media (max-width: 768px) {
 		height: 400px;
@@ -290,6 +324,10 @@ const SponsorGrid = styled.div`
 	gap: 1.5rem;
 	margin-top: 1.5rem;
 	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	
 	@media (max-width: 768px) {
 		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 	}
@@ -300,6 +338,13 @@ const PartnerSponsorGrid = styled.div`
 	grid-template-columns: repeat(2, 1fr);
 	gap: 1.5rem;
 	margin-top: 1.5rem;
+	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		grid-template-columns: repeat(2, 1fr);
+		max-width: 80%;
+		margin-left: auto;
+		margin-right: auto;
+	}
 	
 	@media (max-width: 768px) {
 		grid-template-columns: 1fr;
@@ -633,6 +678,22 @@ function FeaturesSection() {
 								features: transactions, rollbacks, triggers, sub-ms functions,
 								and more, all natively within your game.
 							</FeatureBoxDescription>
+							<CodeBlock
+							language="sql">
+{`BEGIN;
+  UPDATE entity.entities
+  SET meta__data = jsonb_set(
+    jsonb_set(
+      meta__data, 
+      '{position}', 
+      '{"x": 125.4, "y": 10.0, "z": 75.2}'::jsonb
+    ),
+    '{stats, health}', 
+    '80'::jsonb
+  )
+  WHERE general__entity_name = 'player_42';
+COMMIT;`}
+							</CodeBlock>
 						</FeatureContent>
 					</FeatureBox>
 
@@ -669,6 +730,7 @@ function FeaturesSection() {
 				<FeaturesGrid>
 					<FeatureBox>
 						<FeatureContent>
+							<div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🚀</div>
 							<FeatureBoxTitle>Developer-First Infrastructure</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								The{" "}
@@ -691,17 +753,6 @@ function FeaturesSection() {
 							<FeatureBoxDescription>
 								Vircadia is Apache 2.0 licensed, providing legal certainty and flexibility
 								for commercial use, modification, and distribution at any scale.
-							</FeatureBoxDescription>
-						</FeatureContent>
-					</FeatureBox>
-
-					<FeatureBox>
-						<FeatureContent>
-							<FeatureBoxTitle>Enterprise Security</FeatureBoxTitle>
-							<FeatureBoxDescription>
-								OAuth 2.0 authentication with no passwords, validated by
-								partners like Deutsche Telekom, Manchester United, and more for
-								secure access management at scale.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
@@ -731,6 +782,20 @@ function FeaturesSection() {
 							</LogoGrid>
 						</FeatureContent>
 					</FeatureBox>
+
+					<FeatureBox>
+						<FeatureContent>
+							<div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🔒</div>
+							<FeatureBoxTitle>Enterprise Security</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								OAuth 2.0 authentication with no passwords, validated by
+								partners like Deutsche Telekom, Manchester United, and more for
+								secure access management at scale.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
+
+
 				</FeaturesGrid>
 			</FeaturesContainer>
 		</>
@@ -818,6 +883,12 @@ const BottomCTAContainer = styled.section`
 	text-align: center;
 	position: relative;
 	overflow: hidden;
+	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		height: auto;
+		min-height: 80vh;
+		padding: 4rem 1.5rem;
+	}
 `;
 
 const BottomCTAOverlay = styled.div`
@@ -847,6 +918,10 @@ const BottomCTATitle = styled.h2`
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		font-size: 3rem;
+	}
+	
 	@media (max-width: 768px) {
 		font-size: 2.5rem;
 	}
@@ -857,6 +932,11 @@ const BottomCTADescription = styled.p`
 	max-width: 800px;
 	margin: 0 auto 2.5rem;
 	color: var(--ifm-color-emphasis-700);
+	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		font-size: 1.3rem;
+		max-width: 80%;
+	}
 	
 	@media (max-width: 768px) {
 		font-size: 1.2rem;
@@ -898,7 +978,7 @@ function BottomCTASection() {
 				</IconWrapper>
 				<BottomCTATitle>Start building with Vircadia</BottomCTATitle>
 				<BottomCTADescription>
-					Develop games at the speed of thought.
+					Worry about gameplay and less about infrastructure.
 				</BottomCTADescription>
 				<BottomCTAButtonContainer>
 					<Link
@@ -1000,6 +1080,11 @@ const LogoGrid = styled.div`
 	margin-left: auto;
 	margin-right: auto;
 	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		grid-template-columns: repeat(3, 1fr);
+		max-width: 90%;
+	}
+	
 	@media (max-width: 768px) {
 		grid-template-columns: repeat(3, 1fr);
 	}
@@ -1060,6 +1145,10 @@ const TechLogoBox = styled.div<{ $color?: string }>`
 
 const EmptyBox = styled(TechLogoBox)`
 	background-color: var(--ifm-card-background-color);
+	
+	@media (min-width: 769px) and (max-width: 1024px) {
+		display: none;
+	}
 	
 	@media (max-width: 768px) {
 		display: none;
