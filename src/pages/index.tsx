@@ -259,6 +259,7 @@ const SponsorContainer = styled.section`
 	max-width: 1200px;
 	margin: 0 auto;
 	text-align: center;
+	background-color: var(--ifm-background-color);
 `;
 
 const SponsorTitle = styled.h2`
@@ -279,6 +280,19 @@ const SponsorTier = styled.h3`
 	text-transform: uppercase;
 	letter-spacing: 1px;
 	color: var(--ifm-color-emphasis-600);
+	text-align: center;
+	position: relative;
+	
+	&::after {
+		content: '';
+		display: block;
+		width: 100%;
+		height: 1px;
+		background-color: var(--ifm-color-emphasis-200);
+		position: absolute;
+		bottom: -0.75rem;
+		left: 0;
+	}
 `;
 
 const SponsorGrid = styled.div`
@@ -292,8 +306,25 @@ const SponsorGrid = styled.div`
 	}
 `;
 
-const SponsorLogo = styled.div`
-	background-color: var(--ifm-card-background-color);
+const PartnerSponsorGrid = styled.div`
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1.5rem;
+	margin-top: 1.5rem;
+	
+	@media (max-width: 768px) {
+		grid-template-columns: 1fr;
+	}
+`;
+
+interface SponsorLogoProps {
+	$grayscale?: boolean;
+	$adjustContrast?: boolean;
+}
+
+const SponsorLogo = styled.div<SponsorLogoProps>`
+	background-color: var(--ifm-background-surface-color);
+	border: 1px solid var(--ifm-color-emphasis-200);
 	border-radius: 8px;
 	padding: 1.5rem;
 	display: flex;
@@ -301,6 +332,7 @@ const SponsorLogo = styled.div`
 	justify-content: center;
 	height: 100px;
 	transition: transform 0.2s ease;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 	
 	&:hover {
 		transform: scale(1.05);
@@ -309,6 +341,18 @@ const SponsorLogo = styled.div`
 	img {
 		max-width: 100%;
 		max-height: 100%;
+		${(props) =>
+			props.$grayscale &&
+			`
+			filter: grayscale(100%);
+		`}
+		${(props) =>
+			props.$adjustContrast &&
+			`
+			filter: ${props.$grayscale ? "grayscale(100%) " : ""}
+				brightness(0) saturate(100%)
+				var(--ifm-invert-filter);
+		`}
 	}
 `;
 
@@ -699,47 +743,60 @@ function SponsorsSection() {
 	return (
 		<SponsorContainer>
 			<SponsorTitle>Supported By</SponsorTitle>
-			<SponsorSubtitle>
-				Vircadia is made possible by our contributors and these amazing
-				organizations
-			</SponsorSubtitle>
 
 			<SponsorTier>Partners</SponsorTier>
-			<SponsorGrid>
+			<PartnerSponsorGrid>
 				<SponsorLogo>
-					<img src="/img/sponsors/partner1.svg" alt="Partner 1" />
+					<img src="/img/partner/dt.png" alt="Deutsche Telekom" />
 				</SponsorLogo>
 				<SponsorLogo>
-					<img src="/img/sponsors/partner2.svg" alt="Partner 2" />
+					<img src="/img/partner/ua92.png" alt="UA92" />
 				</SponsorLogo>
-			</SponsorGrid>
+			</PartnerSponsorGrid>
 
-			<SponsorTier>Platinum Sponsors</SponsorTier>
+			<SponsorTier>Sponsors</SponsorTier>
 			<SponsorGrid>
-				<SponsorLogo>
-					<img src="/img/sponsors/platinum1.svg" alt="Platinum Sponsor 1" />
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/aws.webp" alt="AWS" />
 				</SponsorLogo>
-				<SponsorLogo>
-					<img src="/img/sponsors/platinum2.svg" alt="Platinum Sponsor 2" />
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/cadec.webp" alt="Cadec" />
 				</SponsorLogo>
-				<SponsorLogo>
-					<img src="/img/sponsors/platinum3.svg" alt="Platinum Sponsor 3" />
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/cimda.png" alt="CIMDA" />
 				</SponsorLogo>
-			</SponsorGrid>
-
-			<SponsorTier>Gold Sponsors</SponsorTier>
-			<SponsorGrid>
-				<SponsorLogo>
-					<img src="/img/sponsors/gold1.svg" alt="Gold Sponsor 1" />
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/bitdegree.png" alt="BitDegree" />
 				</SponsorLogo>
-				<SponsorLogo>
-					<img src="/img/sponsors/gold2.svg" alt="Gold Sponsor 2" />
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/falah_logo.png" alt="FalahTech" />
 				</SponsorLogo>
-				<SponsorLogo>
-					<img src="/img/sponsors/gold3.svg" alt="Gold Sponsor 3" />
+				<SponsorLogo $grayscale $adjustContrast>
+					<img
+						src="/img/partner/free_agent_source.png"
+						alt="Free Agent Source"
+					/>
 				</SponsorLogo>
-				<SponsorLogo>
-					<img src="/img/sponsors/gold4.svg" alt="Gold Sponsor 4" />
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/impromedia.png" alt="Impromedia" />
+				</SponsorLogo>
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/Indiarath_logo.webp" alt="Indiarath" />
+				</SponsorLogo>
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/iota.webp" alt="IOTA" />
+				</SponsorLogo>
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/lagoon_koza.png" alt="Lagoon Koza" />
+				</SponsorLogo>
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/lpi.png" alt="LPI" />
+				</SponsorLogo>
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/mundolatas.webp" alt="Mundolatas" />
+				</SponsorLogo>
+				<SponsorLogo $grayscale $adjustContrast>
+					<img src="/img/partner/webaverse.webp" alt="Webaverse" />
 				</SponsorLogo>
 			</SponsorGrid>
 		</SponsorContainer>
@@ -862,6 +919,20 @@ function BottomCTASection() {
 	);
 }
 
+// Add this CSS variable to the root Layout component
+// We need to find where theme variables are defined and add this
+// Let's add a style block to the component that renders the site
+
+// Add this somewhere in the file, ideally before the export default function
+const GlobalStyle = styled.div`
+	--ifm-invert-filter: invert(0);
+	
+	[data-theme='dark'] & {
+		--ifm-invert-filter: invert(1);
+	}
+`;
+
+// And modify the Home component to use this
 export default function Home(): ReactNode {
 	const { siteConfig } = useDocusaurusContext();
 	const typedElementRef = useRef(null);
@@ -887,33 +958,35 @@ export default function Home(): ReactNode {
 
 	return (
 		<Layout title={siteConfig.tagline} description={siteConfig.tagline}>
-			<HeroContainer>
-				<HeroContent>
-					<HeroTitle>
-						Vircadia is the
-						<br />
-						reactivity layer for
-						<br />
-						{/* biome-ignore lint/suspicious/noCommentText: it's not a comment*/}
-						//&nbsp;
-						<HeroTypedTitle ref={typedElementRef} />
-					</HeroTitle>
-					{/* <HeroSubtitle>Apache 2.0 licensed, production ready.</HeroSubtitle> */}
-					<ButtonContainer>
-						<Link
-							className="button button--primary button--lg"
-							to="/vircadia-world/cli/#quick-start"
-						>
-							Get Started
-						</Link>
-					</ButtonContainer>
-				</HeroContent>
-			</HeroContainer>
-			<main>
-				<FeaturesSection />
-				<SponsorsSection />
-				<BottomCTASection />
-			</main>
+			<GlobalStyle>
+				<HeroContainer>
+					<HeroContent>
+						<HeroTitle>
+							Vircadia is the
+							<br />
+							reactivity layer for
+							<br />
+							{/* biome-ignore lint/suspicious/noCommentText: it's not a comment*/}
+							//&nbsp;
+							<HeroTypedTitle ref={typedElementRef} />
+						</HeroTitle>
+						{/* <HeroSubtitle>Apache 2.0 licensed, production ready.</HeroSubtitle> */}
+						<ButtonContainer>
+							<Link
+								className="button button--primary button--lg"
+								to="/vircadia-world/cli/#quick-start"
+							>
+								Get Started
+							</Link>
+						</ButtonContainer>
+					</HeroContent>
+				</HeroContainer>
+				<main>
+					<FeaturesSection />
+					<SponsorsSection />
+					<BottomCTASection />
+				</main>
+			</GlobalStyle>
 		</Layout>
 	);
 }
