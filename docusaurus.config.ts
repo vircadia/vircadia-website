@@ -65,7 +65,7 @@ const config: Config = {
 					sidebarPath: "./sidebars.ts",
 					path: "docs/vircadia-world/",
 					routeBasePath: "vircadia-world",
-					exclude: [],
+					exclude: ["**/vircadia-world-sdk-py/**"],
 					// Please change this to your repo.
 					// Remove this to remove the "edit this page" links.
 					editUrl: "https://github.com/Vircadia/vircadia-world/",
