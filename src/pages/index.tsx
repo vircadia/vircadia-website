@@ -1291,7 +1291,7 @@ function BottomCTASection() {
 				<BottomCTAButtonContainer>
 					<Link
 						className="button button--primary button--lg"
-						to="/vircadia-world/cli/#quick-start"
+						to="/vircadia-world/"
 					>
 						Get Started
 					</Link>
@@ -1451,7 +1451,7 @@ export default function Home(): ReactNode {
 						<ButtonContainer>
 							<Link
 								className="button button--primary button--lg"
-								to="/vircadia-world/cli/#quick-start"
+								to="/vircadia-world/"
 							>
 								Get Started
 							</Link>

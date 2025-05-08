@@ -103,8 +103,8 @@ const config: Config = {
 			items: [
 				{ to: "/vircadia-world", label: "Documentation", position: "left" },
 				{
-					to: "/vircadia-world/cli/#quick-start",
-					label: "Quick Start",
+					to: "/vircadia-world/",
+					label: "Get Started",
 					position: "left",
 				},
 				{ to: "/blog", label: "Blog", position: "left" },
