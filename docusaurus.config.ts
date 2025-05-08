@@ -149,7 +149,7 @@ const config: Config = {
 				'Need help integrating Vircadia? <a href="mailto:hello@vircadia.com">Get in touch!</a>',
 			isCloseable: false,
 		},
-		defaultMode: "dark",
+		defaultMode: "light",
 		prism: {
 			theme: prismThemes.github,
 			darkTheme: prismThemes.dracula,
