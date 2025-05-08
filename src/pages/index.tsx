@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import Typed from "typed.js";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -8,9 +8,10 @@ import styled from "styled-components";
 import CodeBlock from "@theme/CodeBlock";
 import type { Node as FlowNode, Edge } from "@xyflow/react";
 import { ReactFlow, Position, ReactFlowProvider, Handle } from "@xyflow/react";
-import * as THREE from "three";
-import { Canvas, useFrame } from "@react-three/fiber";
 import "@xyflow/react/dist/style.css";
+import { debounce } from "lodash";
+import { Canvas, type ThreeEvent } from "@react-three/fiber";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 // Styled components
 const FeaturesContainer = styled.section`
@@ -673,78 +674,145 @@ function VircadiaFlow() {
 
 // Add animated wrapper to animate StateTickScene entrance on scroll
 const AnimatedCanvasWrapper = styled.div<{ $inView: boolean }>`
+	position: relative;
 	opacity: ${({ $inView }) => ($inView ? 1 : 0)};
 	transform: translateY(${({ $inView }) => ($inView ? "0" : "20px")});
 	transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 `;
 
-function FeaturesSection() {
-	// R3F State Tick components (side view, orthographic, smooth lerp)
-	const positions: number[] = [-1, -0.6, -0.2, 0.2, 0.6, 1];
-	function StateTickBar({ position }: { position: number[] }) {
-		const meshRef = useRef<THREE.Mesh | null>(null);
-		const [hovered, setHover] = useState(false);
-		useFrame((state, delta) => {
-			if (!meshRef.current) return;
-			meshRef.current.position.y = THREE.MathUtils.lerp(
-				meshRef.current.position.y,
-				hovered ? 0.2 : 0,
-				delta * 10,
-			);
-		});
-		return (
-			<mesh
-				ref={meshRef}
-				position={[position[0], 0, position[2]]}
-				onPointerOver={() => setHover(true)}
-				onPointerOut={() => setHover(false)}
-			>
-				<boxGeometry args={[0.1, 1, 0.1]} />
-				<meshStandardMaterial
-					color="#2f74c0"
-					transparent
-					opacity={hovered ? 1 : 0.3}
-				/>
-			</mesh>
-		);
-	}
+// HTML/CSS ticker overlay
+const TickerOverlay = styled.div`
+	position: absolute;
+	bottom: 24px;
+	width: 100%;
+	text-align: center;
+	font-size: 1rem;
+	color: var(--ifm-color-emphasis-800);
+	pointer-events: none;
 
-	function StateTickScene() {
-		const containerRef = useRef<HTMLDivElement>(null);
-		const [inView, setInView] = useState(false);
-		useEffect(() => {
-			if (!containerRef.current) return;
-			const observer = new IntersectionObserver(
-				([entry]) => {
-					if (entry.isIntersecting) {
-						setInView(true);
-						observer.disconnect();
-					}
-				},
-				{ threshold: 0.1 },
-			);
-			observer.observe(containerRef.current);
-			return () => observer.disconnect();
-		}, []);
-		return (
-			<AnimatedCanvasWrapper
-				ref={containerRef}
-				$inView={inView}
-				style={{ background: "transparent", height: "200px", width: "100%" }}
-			>
-				{inView && (
+	&.ticker-enter {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	&.ticker-enter-active {
+		opacity: 1;
+		transform: translateY(0);
+		transition: opacity 600ms ease-out, transform 600ms ease-out;
+	}
+	&.ticker-exit {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	&.ticker-exit-active {
+		opacity: 0;
+		transform: translateY(-20px);
+		transition: opacity 600ms ease-in, transform 600ms ease-in;
+	}
+`;
+
+// Hoisted state-tick logic with hover and auto-cycle
+const positions: number[] = [-1, -0.6, -0.2, 0.2, 0.6, 1];
+const labels: string[] = [
+	"Block 1",
+	"Block 2",
+	"Block 3",
+	"Block 4",
+	"Block 5",
+	"Block 6",
+];
+
+function StateTickScene(): ReactNode {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [inView, setInView] = useState(false);
+	const [hovered, setHovered] = useState<number | null>(null);
+	const debouncedHover = useCallback(debounce(setHovered, 30), []);
+	const [autoIndex, setAutoIndex] = useState(0);
+	// Ref for the TickerOverlay to avoid findDOMNode
+	const tickerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (!containerRef.current) return;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
+					setInView(true);
+					observer.disconnect();
+				}
+			},
+			{ threshold: 0.1 },
+		);
+		observer.observe(containerRef.current);
+		return () => observer.disconnect();
+	}, []);
+
+	useEffect(() => {
+		let interval: ReturnType<typeof setInterval>;
+		if (inView) {
+			interval = setInterval(() => {
+				setAutoIndex((prev) => (prev + 1) % positions.length);
+			}, 2000);
+		}
+		return () => clearInterval(interval);
+	}, [inView]);
+
+	const currentIndex = hovered !== null ? hovered : autoIndex;
+	const handlePointerOver =
+		(index: number) => (e: ThreeEvent<PointerEvent>) => {
+			e.stopPropagation();
+			debouncedHover(index);
+		};
+	const handlePointerOut = () => {
+		debouncedHover(null);
+	};
+
+	return (
+		<AnimatedCanvasWrapper
+			ref={containerRef}
+			$inView={inView}
+			style={{ background: "transparent", height: "200px", width: "100%" }}
+		>
+			{inView && (
+				<>
 					<Canvas orthographic camera={{ position: [0, 0, 5], zoom: 70 }}>
 						<ambientLight intensity={0.5} />
 						<directionalLight position={[0, 5, 5]} intensity={1} />
-						{positions.map((x) => (
-							<StateTickBar key={x} position={[x, 0, 0]} />
+						{positions.map((x, index) => (
+							<mesh
+								key={x}
+								position={[x, 0, 0]}
+								onPointerOver={handlePointerOver(index)}
+								onPointerOut={handlePointerOut}
+							>
+								<boxGeometry args={[0.1, 1, 0.1]} />
+								<meshStandardMaterial
+									color="#2f74c0"
+									transparent
+									opacity={currentIndex === index ? 1 : 0.3}
+								/>
+							</mesh>
 						))}
 					</Canvas>
-				)}
-			</AnimatedCanvasWrapper>
-		);
-	}
+					<TransitionGroup component={null}>
+						<CSSTransition
+							key={currentIndex}
+							nodeRef={tickerRef}
+							classNames="ticker"
+							timeout={600}
+							mountOnEnter
+							unmountOnExit
+						>
+							<TickerOverlay ref={tickerRef}>
+								{labels[currentIndex]}
+							</TickerOverlay>
+						</CSSTransition>
+					</TransitionGroup>
+				</>
+			)}
+		</AnimatedCanvasWrapper>
+	);
+}
 
+function FeaturesSection() {
 	return (
 		<>
 			<FeaturesContainer>
@@ -794,14 +862,8 @@ WHERE general__entity_name = 'player_42';`}
 							<FeatureBoxTitle>Minimalist Framework</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Vircadia cuts out unnecessary layers and abstraction for maximum
-								performance and stability, Vircadia wraps as directly as
-								possible
-								<ul style={{ marginTop: "0.5rem" }}>
-									<li>Bun.sh</li>
-									<li>PostgreSQL</li>
-									<li>Docker</li>
-								</ul>
-								into a single, cohesive framework.
+								performance and stability, wrapping core components into a
+								single, cohesive framework.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
