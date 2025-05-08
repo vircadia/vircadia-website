@@ -10,8 +10,12 @@ import type { Node as FlowNode, Edge } from "@xyflow/react";
 import { ReactFlow, Position, ReactFlowProvider, Handle } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { debounce } from "lodash";
-import { Canvas, type ThreeEvent } from "@react-three/fiber";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { Canvas, type ThreeEvent, useFrame } from "@react-three/fiber";
+import { Text, Mask, useMask } from "@react-three/drei";
+import { easing } from "maath";
+import type { Group } from "three";
+import useIsBrowser from "@docusaurus/useIsBrowser";
+import { useColorMode } from "@docusaurus/theme-common";
 
 // Styled components
 const FeaturesContainer = styled.section`
@@ -680,46 +684,55 @@ const AnimatedCanvasWrapper = styled.div<{ $inView: boolean }>`
 	transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 `;
 
-// HTML/CSS ticker overlay
-const TickerOverlay = styled.div`
-	position: absolute;
-	bottom: 24px;
-	width: 100%;
-	text-align: center;
-	font-size: 1rem;
-	color: var(--ifm-color-emphasis-800);
-	pointer-events: none;
-
-	&.ticker-enter {
-		opacity: 0;
-		transform: translateY(20px);
-	}
-	&.ticker-enter-active {
-		opacity: 1;
-		transform: translateY(0);
-		transition: opacity 600ms ease-out, transform 600ms ease-out;
-	}
-	&.ticker-exit {
-		opacity: 1;
-		transform: translateY(0);
-	}
-	&.ticker-exit-active {
-		opacity: 0;
-		transform: translateY(-20px);
-		transition: opacity 600ms ease-in, transform 600ms ease-in;
-	}
-`;
-
 // Hoisted state-tick logic with hover and auto-cycle
 const positions: number[] = [-1, -0.6, -0.2, 0.2, 0.6, 1];
 const labels: string[] = [
-	"Block 1",
-	"Block 2",
-	"Block 3",
-	"Block 4",
-	"Block 5",
-	"Block 6",
+	"543 entities",
+	"547 entities",
+	"551 entities",
+	"555 entities",
+	"559 entities",
+	"563 entities",
 ];
+
+// Ticker component using stencil mask
+function StateTicker({ label, visible }: { label: string; visible: boolean }) {
+	const ref = useRef<Group>(null);
+	const stencil = useMask(1);
+	const { colorMode } = useColorMode();
+	const isBrowser = useIsBrowser();
+
+	// Get CSS variable for primary color based on the current theme
+	const getCssVariable = () => {
+		if (!isBrowser) return colorMode === "dark" ? "#01bdff" : "#466bff"; // Fallback for SSR
+		const rootStyle = getComputedStyle(document.documentElement);
+		return rootStyle.getPropertyValue("--ifm-color-primary").trim();
+	};
+
+	const textColor = getCssVariable();
+
+	useFrame((state, delta) => {
+		if (ref.current) {
+			easing.damp(ref.current.position, "y", visible ? 0 : -2, 0.2, delta);
+		}
+	});
+
+	return (
+		<group ref={ref}>
+			<Text
+				position={[0, 0, 0]}
+				fontSize={0.3}
+				font="font/Manrope/Manrope-VariableFont_wght.ttf"
+				color={textColor}
+				anchorX="center"
+				anchorY="middle"
+			>
+				{label}
+				<meshBasicMaterial {...stencil} />
+			</Text>
+		</group>
+	);
+}
 
 function StateTickScene(): ReactNode {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -727,8 +740,6 @@ function StateTickScene(): ReactNode {
 	const [hovered, setHovered] = useState<number | null>(null);
 	const debouncedHover = useCallback(debounce(setHovered, 30), []);
 	const [autoIndex, setAutoIndex] = useState(0);
-	// Ref for the TickerOverlay to avoid findDOMNode
-	const tickerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (!containerRef.current) return;
@@ -772,41 +783,43 @@ function StateTickScene(): ReactNode {
 			style={{ background: "transparent", height: "200px", width: "100%" }}
 		>
 			{inView && (
-				<>
-					<Canvas orthographic camera={{ position: [0, 0, 5], zoom: 70 }}>
-						<ambientLight intensity={0.5} />
-						<directionalLight position={[0, 5, 5]} intensity={1} />
-						{positions.map((x, index) => (
-							<mesh
-								key={x}
-								position={[x, 0, 0]}
-								onPointerOver={handlePointerOver(index)}
-								onPointerOut={handlePointerOut}
-							>
-								<boxGeometry args={[0.1, 1, 0.1]} />
-								<meshStandardMaterial
-									color="#2f74c0"
-									transparent
-									opacity={currentIndex === index ? 1 : 0.3}
-								/>
-							</mesh>
-						))}
-					</Canvas>
-					<TransitionGroup component={null}>
-						<CSSTransition
-							key={currentIndex}
-							nodeRef={tickerRef}
-							classNames="ticker"
-							timeout={600}
-							mountOnEnter
-							unmountOnExit
+				<Canvas orthographic camera={{ position: [0, 0, 5], zoom: 70 }}>
+					<ambientLight intensity={0.5} />
+					<directionalLight position={[0, 5, 5]} intensity={1} />
+
+					{/* Block bars */}
+					{positions.map((x, index) => (
+						<mesh
+							key={x}
+							position={[x, 0, 0]}
+							onPointerOver={handlePointerOver(index)}
+							onPointerOut={handlePointerOut}
 						>
-							<TickerOverlay ref={tickerRef}>
-								{labels[currentIndex]}
-							</TickerOverlay>
-						</CSSTransition>
-					</TransitionGroup>
-				</>
+							<boxGeometry args={[0.1, 1, 0.1]} />
+							<meshStandardMaterial
+								color="#2f74c0"
+								transparent
+								opacity={currentIndex === index ? 1 : 0.3}
+							/>
+						</mesh>
+					))}
+
+					{/* Stencil mask container at the bottom */}
+					<group position={[0, -0.8, 0]}>
+						<Mask id={1} position={[0, 0, 0]}>
+							<planeGeometry args={[3, 0.4]} />
+						</Mask>
+
+						{/* Render all labels in the stencil area */}
+						{labels.map((label, index) => (
+							<StateTicker
+								key={`ticker-${label}`}
+								label={label}
+								visible={currentIndex === index}
+							/>
+						))}
+					</group>
+				</Canvas>
 			)}
 		</AnimatedCanvasWrapper>
 	);
