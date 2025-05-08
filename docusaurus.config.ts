@@ -144,13 +144,12 @@ const config: Config = {
 			copyright: `Copyright © ${new Date().getFullYear()} Vircadia`,
 		},
 		announcementBar: {
-			id: "support_us",
+			id: "need_help_announcement_bar",
 			content:
 				'Need help integrating Vircadia? <a href="mailto:hello@vircadia.com">Get in touch!</a>',
-			backgroundColor: "#fafbfc",
-			textColor: "#091E42",
 			isCloseable: false,
 		},
+		defaultMode: "dark",
 		prism: {
 			theme: prismThemes.github,
 			darkTheme: prismThemes.dracula,
