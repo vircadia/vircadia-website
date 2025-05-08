@@ -5,9 +5,11 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import styled from "styled-components";
-import CodeBlock from '@theme/CodeBlock';
+import CodeBlock from "@theme/CodeBlock";
 import type { Node as FlowNode, Edge } from "@xyflow/react";
 import { ReactFlow, Position, ReactFlowProvider, Handle } from "@xyflow/react";
+import * as THREE from "three";
+import { Canvas, useFrame } from "@react-three/fiber";
 import "@xyflow/react/dist/style.css";
 
 // Styled components
@@ -68,6 +70,11 @@ const FeatureBoxTitle = styled.h3`
 const FeatureBoxDescription = styled.p`
 	color: var(--ifm-color-emphasis-700);
 	line-height: 1.6;
+`;
+
+const Emoji = styled.div`
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
 `;
 
 const AnimatedEmoji = styled.div`
@@ -137,13 +144,25 @@ const FeatureBox = styled(FeatureBoxBase)<FeatureBoxProps>`
 
 // Header styled components
 const HeroContainer = styled.header`
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	align-items: center;
+	gap: 2rem;
+	max-width: 1200px;
+	margin: 0 auto;
 	padding: 4rem 2rem;
 	background: linear-gradient(135deg, var(--ifm-background-color) 0%, var(--ifm-color-emphasis-200) 100%);
 	overflow: hidden;
 	position: relative;
 	
 	@media (min-width: 769px) and (max-width: 1024px) {
+		grid-template-columns: 1fr 1fr;
 		padding: 3rem 1.5rem;
+	}
+	
+	@media (max-width: 768px) {
+		grid-template-columns: 1fr;
+		padding: 2rem 1rem;
 	}
 `;
 
@@ -193,6 +212,13 @@ const HeroSubtitle = styled.p`
 	@media (max-width: 768px) {
 		font-size: 1.2rem;
 	}
+`;
+
+// Add this styled component for the hero graph layout
+const HeroGraph = styled.div`
+	transform: perspective(1000px);
+	transform-style: preserve-3d;
+	margin: 0.5rem 0;
 `;
 
 // React Flow styled components
@@ -645,31 +671,96 @@ function VircadiaFlow() {
 	);
 }
 
+// Add animated wrapper to animate StateTickScene entrance on scroll
+const AnimatedCanvasWrapper = styled.div<{ $inView: boolean }>`
+	opacity: ${({ $inView }) => ($inView ? 1 : 0)};
+	transform: translateY(${({ $inView }) => ($inView ? "0" : "20px")});
+	transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+`;
+
 function FeaturesSection() {
+	// R3F State Tick components (side view, orthographic, smooth lerp)
+	const positions: number[] = [-1, -0.6, -0.2, 0.2, 0.6, 1];
+	function StateTickBar({ position }: { position: number[] }) {
+		const meshRef = useRef<THREE.Mesh | null>(null);
+		const [hovered, setHover] = useState(false);
+		useFrame((state, delta) => {
+			if (!meshRef.current) return;
+			meshRef.current.position.y = THREE.MathUtils.lerp(
+				meshRef.current.position.y,
+				hovered ? 0.2 : 0,
+				delta * 10,
+			);
+		});
+		return (
+			<mesh
+				ref={meshRef}
+				position={[position[0], 0, position[2]]}
+				onPointerOver={() => setHover(true)}
+				onPointerOut={() => setHover(false)}
+			>
+				<boxGeometry args={[0.1, 1, 0.1]} />
+				<meshStandardMaterial
+					color="#2f74c0"
+					transparent
+					opacity={hovered ? 1 : 0.3}
+				/>
+			</mesh>
+		);
+	}
+
+	function StateTickScene() {
+		const containerRef = useRef<HTMLDivElement>(null);
+		const [inView, setInView] = useState(false);
+		useEffect(() => {
+			if (!containerRef.current) return;
+			const observer = new IntersectionObserver(
+				([entry]) => {
+					if (entry.isIntersecting) {
+						setInView(true);
+						observer.disconnect();
+					}
+				},
+				{ threshold: 0.1 },
+			);
+			observer.observe(containerRef.current);
+			return () => observer.disconnect();
+		}, []);
+		return (
+			<AnimatedCanvasWrapper
+				ref={containerRef}
+				$inView={inView}
+				style={{ background: "transparent", height: "200px", width: "100%" }}
+			>
+				{inView && (
+					<Canvas orthographic camera={{ position: [0, 0, 5], zoom: 70 }}>
+						<ambientLight intensity={0.5} />
+						<directionalLight position={[0, 5, 5]} intensity={1} />
+						{positions.map((x) => (
+							<StateTickBar key={x} position={[x, 0, 0]} />
+						))}
+					</Canvas>
+				)}
+			</AnimatedCanvasWrapper>
+		);
+	}
+
 	return (
 		<>
 			<FeaturesContainer>
 				<FeaturesGrid>
-					<FeatureBox $tall>
+					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxTitle>Unified Architecture</FeatureBoxTitle>
+							<StateTickScene />
+							<FeatureBoxTitle>Realtime State Tracking</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								A complete framework that bridges 3D assets and data to all
-								platforms.
+								High-performance server-side tracking of all entity states to
+								assist in anti-cheat and competitive gaming.
 							</FeatureBoxDescription>
-							<div
-								style={{
-									transform: "perspective(1000px)",
-									transformStyle: "preserve-3d",
-									margin: "0.5rem 0",
-								}}
-							>
-								<VircadiaFlow />
-							</div>
 						</FeatureContent>
 					</FeatureBox>
 
-					<FeatureBox $wide>
+					<FeatureBox $wide $tall>
 						<FeatureContent>
 							<AnimatedEmoji>⚡</AnimatedEmoji>
 							<FeatureBoxTitle>PostgreSQL-Powered Worlds</FeatureBoxTitle>
@@ -678,32 +769,39 @@ function FeaturesSection() {
 								features: transactions, rollbacks, triggers, sub-ms functions,
 								and more, all natively within your game.
 							</FeatureBoxDescription>
-							<CodeBlock
-							language="sql">
-{`BEGIN;
-  UPDATE entity.entities
-  SET meta__data = jsonb_set(
-    jsonb_set(
-      meta__data, 
-      '{position}', 
-      '{"x": 125.4, "y": 10.0, "z": 75.2}'::jsonb
-    ),
-    '{stats, health}', 
-    '80'::jsonb
-  )
-  WHERE general__entity_name = 'player_42';
-COMMIT;`}
+							<CodeBlock title="update_player_data.ts" language="sql">
+								{`
+UPDATE entity.entities
+SET meta__data = meta__data ||
+'{
+  "position": {
+    "x":125.4,
+	"y":10.0,
+	"z":75.2
+  },
+  "stats": {
+	"health":80
+  }
+}'::jsonb
+WHERE general__entity_name = 'player_42';`}
 							</CodeBlock>
 						</FeatureContent>
 					</FeatureBox>
 
 					<FeatureBox>
 						<FeatureContent>
-							<AnimatedSwordsEmoji>⚔️</AnimatedSwordsEmoji>
-							<FeatureBoxTitle>Realtime State Tracking</FeatureBoxTitle>
+							<Emoji>🧩</Emoji>
+							<FeatureBoxTitle>Minimalist Framework</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								High-performance server-side tracking of all entity states to
-								assist in anti-cheat and competitive gaming.
+								Vircadia cuts out unnecessary layers and abstraction for maximum
+								performance and stability, Vircadia wraps as directly as
+								possible
+								<ul style={{ marginTop: "0.5rem" }}>
+									<li>Bun.sh</li>
+									<li>PostgreSQL</li>
+									<li>Docker</li>
+								</ul>
+								into a single, cohesive framework.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
@@ -747,12 +845,17 @@ COMMIT;`}
 					<FeatureBox $wide>
 						<FeatureContent>
 							<div style={{ textAlign: "center", marginBottom: "1rem" }}>
-								<img src="/img/asf.svg" alt="Apache Software Foundation Logo" style={{ height: "60px" }} />
+								<img
+									src="/img/asf.svg"
+									alt="Apache Software Foundation Logo"
+									style={{ height: "60px" }}
+								/>
 							</div>
 							<FeatureBoxTitle>Permissively Licensed (FOSS)</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								Vircadia is Apache 2.0 licensed, providing legal certainty and flexibility
-								for commercial use, modification, and distribution at any scale.
+								Vircadia is Apache 2.0 licensed, providing legal certainty and
+								flexibility for commercial use, modification, and distribution
+								at any scale.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
@@ -794,8 +897,6 @@ COMMIT;`}
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
-
-
 				</FeaturesGrid>
 			</FeaturesContainer>
 		</>
@@ -1012,7 +1113,6 @@ const GlobalStyle = styled.div`
 	}
 `;
 
-// And modify the Home component to use this
 export default function Home(): ReactNode {
 	const { siteConfig } = useDocusaurusContext();
 	const typedElementRef = useRef(null);
@@ -1020,7 +1120,7 @@ export default function Home(): ReactNode {
 	useEffect(() => {
 		if (typedElementRef.current) {
 			const typed = new Typed(typedElementRef.current, {
-				strings: ["game items", "players", "models", "games."],
+				strings: ["&nbsp;items", "&nbsp;players", "&nbsp;assets", "s."],
 				typeSpeed: 80,
 				backSpeed: 50,
 				backDelay: 5000,
@@ -1042,15 +1142,11 @@ export default function Home(): ReactNode {
 				<HeroContainer>
 					<HeroContent>
 						<HeroTitle>
-							Vircadia is the
+							The reactivity layer for
 							<br />
-							reactivity layer for
-							<br />
-							{/* biome-ignore lint/suspicious/noCommentText: it's not a comment*/}
-							//&nbsp;
+							game
 							<HeroTypedTitle ref={typedElementRef} />
 						</HeroTitle>
-						{/* <HeroSubtitle>Apache 2.0 licensed, production ready.</HeroSubtitle> */}
 						<ButtonContainer>
 							<Link
 								className="button button--primary button--lg"
@@ -1060,6 +1156,9 @@ export default function Home(): ReactNode {
 							</Link>
 						</ButtonContainer>
 					</HeroContent>
+					<HeroGraph>
+						<VircadiaFlow />
+					</HeroGraph>
 				</HeroContainer>
 				<main>
 					<FeaturesSection />
@@ -1101,10 +1200,10 @@ const TechLogoBox = styled.div<{ $color?: string }>`
 	justify-content: center;
 	padding: 1rem;
 	position: relative;
-	box-shadow: ${props => props.$color ? `0 8px 15px ${props.$color}` : '0 8px 12px rgba(0, 0, 0, 0.15)'};
+	box-shadow: ${(props) => (props.$color ? `0 8px 15px ${props.$color}` : "0 8px 12px rgba(0, 0, 0, 0.15)")};
 	
 	&:hover {
-		box-shadow: ${props => props.$color ? `0 12px 25px ${props.$color}` : '0 12px 20px rgba(0, 0, 0, 0.2)'};
+		box-shadow: ${(props) => (props.$color ? `0 12px 25px ${props.$color}` : "0 12px 20px rgba(0, 0, 0, 0.2)")};
 	}
 	
 	&:before {
@@ -1114,12 +1213,12 @@ const TechLogoBox = styled.div<{ $color?: string }>`
 		right: -15px;
 		bottom: -20px;
 		top: 20px;
-		background: ${props => props.$color || 'rgba(0,0,0,0.1)'};
+		background: ${(props) => props.$color || "rgba(0,0,0,0.1)"};
 		filter: blur(20px);
 		border-radius: 16px;
 		z-index: -1;
-		opacity: ${props => props.$color ? 0.5 : 0.05};
-		animation: ${props => props.$color ? 'coloredGlow' : 'subtleGlow'} 3s infinite ease-in-out;
+		opacity: ${(props) => (props.$color ? 0.5 : 0.05)};
+		animation: ${(props) => (props.$color ? "coloredGlow" : "subtleGlow")} 3s infinite ease-in-out;
 	}
 	
 	@keyframes coloredGlow {
