@@ -685,7 +685,7 @@ const AnimatedCanvasWrapper = styled.div<{ $inView: boolean }>`
 `;
 
 // Hoisted state-tick logic with hover and auto-cycle
-const positions: number[] = [-1, -0.6, -0.2, 0.2, 0.6, 1];
+const positions: number[] = [-1.2, -0.8, -0.4, 0, 0.4, 0.8, 1.2];
 const labels: string[] = [
 	"543 entities",
 	"547 entities",
@@ -693,6 +693,7 @@ const labels: string[] = [
 	"555 entities",
 	"559 entities",
 	"563 entities",
+	"567 entities",
 ];
 
 // Ticker component using stencil mask
@@ -703,13 +704,28 @@ function StateTicker({ label, visible }: { label: string; visible: boolean }) {
 	const isBrowser = useIsBrowser();
 
 	// Get CSS variable for primary color based on the current theme
-	const getCssVariable = () => {
-		if (!isBrowser) return colorMode === "dark" ? "#01bdff" : "#466bff"; // Fallback for SSR
+	const getCssVariable = (variable: string) => {
+		if (!isBrowser) {
+			// Fallback colors for SSR
+			const darkModeDefaults = {
+				"--ifm-color-primary": "#01bdff",
+				"--ifm-color-primary-dark": "#00aae6",
+				"--ifm-color-primary-lighter": "#29c8ff",
+			};
+			const lightModeDefaults = {
+				"--ifm-color-primary": "#466bff",
+				"--ifm-color-primary-dark": "#2952ff",
+				"--ifm-color-primary-lighter": "#7190ff",
+			};
+			return colorMode === "dark"
+				? darkModeDefaults[variable]
+				: lightModeDefaults[variable];
+		}
 		const rootStyle = getComputedStyle(document.documentElement);
-		return rootStyle.getPropertyValue("--ifm-color-primary").trim();
+		return rootStyle.getPropertyValue(variable).trim();
 	};
 
-	const textColor = getCssVariable();
+	const textColor = getCssVariable("--ifm-color-primary");
 
 	useFrame((state, delta) => {
 		if (ref.current) {
@@ -740,6 +756,63 @@ function StateTickScene(): ReactNode {
 	const [hovered, setHovered] = useState<number | null>(null);
 	const debouncedHover = useCallback(debounce(setHovered, 30), []);
 	const [autoIndex, setAutoIndex] = useState(0);
+	const { colorMode } = useColorMode();
+	const isBrowser = useIsBrowser();
+	// Force re-render when theme changes
+	const [themeColors, setThemeColors] = useState({
+		primary: "",
+		dark: "",
+		lighter: "",
+	});
+
+	// Get CSS variable for colors based on the current theme (memoized)
+	const getCssVariable = useCallback(
+		(variable: string) => {
+			if (!isBrowser) {
+				// Fallback colors for SSR
+				const darkModeDefaults = {
+					"--ifm-color-primary": "#01bdff",
+					"--ifm-color-primary-dark": "#00aae6",
+					"--ifm-color-primary-lighter": "#29c8ff",
+				};
+				const lightModeDefaults = {
+					"--ifm-color-primary": "#466bff",
+					"--ifm-color-primary-dark": "#2952ff",
+					"--ifm-color-primary-lighter": "#7190ff",
+				};
+				return colorMode === "dark"
+					? darkModeDefaults[variable]
+					: lightModeDefaults[variable];
+			}
+			const rootStyle = getComputedStyle(document.documentElement);
+			return rootStyle.getPropertyValue(variable).trim();
+		},
+		[isBrowser, colorMode],
+	);
+
+	// Update colors when theme changes
+	useEffect(() => {
+		const updateColors = () => {
+			setThemeColors({
+				primary: getCssVariable("--ifm-color-primary"),
+				dark: getCssVariable("--ifm-color-primary-dark"),
+				lighter: getCssVariable("--ifm-color-primary-lighter"),
+			});
+		};
+
+		updateColors();
+
+		// Also listen for theme changes in the DOM
+		if (isBrowser) {
+			const observer = new MutationObserver(updateColors);
+			observer.observe(document.documentElement, {
+				attributes: true,
+				attributeFilter: ["data-theme"],
+			});
+
+			return () => observer.disconnect();
+		}
+	}, [getCssVariable, isBrowser]);
 
 	useEffect(() => {
 		if (!containerRef.current) return;
@@ -795,11 +868,17 @@ function StateTickScene(): ReactNode {
 							onPointerOver={handlePointerOver(index)}
 							onPointerOut={handlePointerOut}
 						>
-							<boxGeometry args={[0.1, 1, 0.1]} />
+							<boxGeometry args={[0.2, 1, 0.2]} />
 							<meshStandardMaterial
-								color="#2f74c0"
+								color={
+									currentIndex === index
+										? themeColors.primary
+										: themeColors.lighter
+								}
 								transparent
-								opacity={currentIndex === index ? 1 : 0.3}
+								opacity={currentIndex === index ? 1 : 0.7}
+								metalness={0.2}
+								roughness={0.8}
 							/>
 						</mesh>
 					))}
