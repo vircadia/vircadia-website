@@ -1017,7 +1017,7 @@ WHERE general__entity_name = 'player_42';`}
 							</div>
 							<FeatureBoxTitle>No SDK? No Problem!</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								Connect to the API via Websocket or HTTP, then interact with
+								<a href="/vircadia-world/server/service/api/">Connect to the API</a> via Websocket or HTTP, then interact with
 								Vircadia directly with your favorite SQL client.
 							</FeatureBoxDescription>
 						</FeatureContent>
