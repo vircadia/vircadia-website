@@ -12,7 +12,8 @@
     "serve": "docusaurus serve --host 0.0.0.0 --port 80",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "generate-og": "bun run ./util/og.ts"
   },
   "dependencies": {
     "@docusaurus/core": "3.7.0",
@@ -23,6 +24,7 @@
     "@types/react-transition-group": "^4.4.12",
     "@xyflow/react": "^12.6.0",
     "clsx": "^2.0.0",
+    "html-to-image": "^1.11.13",
     "lodash": "^4.17.21",
     "maath": "^0.10.8",
     "prism-react-renderer": "^2.3.0",
@@ -39,6 +41,8 @@
     "@docusaurus/tsconfig": "3.7.0",
     "@docusaurus/types": "3.7.0",
     "@types/lodash": "^4.17.16",
+    "puppeteer": "^24.8.2",
+    "html-to-image": "^1.11.13",
     "typescript": "~5.6.2",
     "vue": "^3.5.13"
   },
