@@ -17,6 +17,25 @@ import type { Group } from "three";
 import useIsBrowser from "@docusaurus/useIsBrowser";
 import { useColorMode } from "@docusaurus/theme-common";
 
+import { HiShieldCheck, HiSparkles } from "react-icons/hi";
+import { VscHeartFilled } from "react-icons/vsc";
+
+// Add import for package.json
+import cliPackageJson from "../../docs/vircadia-world/cli/package.json";
+
+// Add this CSS variable to the root Layout component
+// We need to find where theme variables are defined and add this
+// Let's add a style block to the component that renders the site
+
+// Add this somewhere in the file, ideally before the export default function
+const GlobalStyle = styled.div`
+	--ifm-invert-filter: invert(0);
+	
+	[data-theme='dark'] & {
+		--ifm-invert-filter: invert(1);
+	}
+`;
+
 // Styled components
 const FeaturesContainer = styled.section`
 	padding: 2rem;
@@ -314,6 +333,36 @@ const SponsorContainer = styled.section`
 	margin: 0 auto;
 	text-align: center;
 	background-color: var(--ifm-background-color);
+`;
+
+const OpenSourceHeader = styled.h2`
+	font-size: 3.5rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+	text-align: center;
+`;
+
+const OpenSourceDescription = styled.p`
+	color: var(--ifm-color-emphasis-700);
+	margin-bottom: 2.5rem;
+	max-width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 1.2rem;
+`;
+
+const HeartIcon = styled.div`
+	color: var(--ifm-color-primary);
+	font-size: 3rem;
+	margin-bottom: 0rem;
+	text-align: center;
+	animation: heartbeat 2s infinite ease-in-out;
+	
+	@keyframes heartbeat {
+		0% { transform: scale(1); }
+		50% { transform: scale(1.1); }
+		100% { transform: scale(1); }
+	}
 `;
 
 const SponsorTitle = styled.h2`
@@ -950,19 +999,9 @@ WHERE general__entity_name = 'player_42';`}
 
 					<FeatureBox>
 						<FeatureContent>
-							<Emoji>🧩</Emoji>
-							<FeatureBoxTitle>Minimalist Framework</FeatureBoxTitle>
-							<FeatureBoxDescription>
-								Vircadia cuts out unnecessary layers and abstraction for maximum
-								performance and stability, wrapping core components into a
-								single, cohesive framework.
-							</FeatureBoxDescription>
-						</FeatureContent>
-					</FeatureBox>
-
-					<FeatureBox>
-						<FeatureContent>
-							<div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🔌</div>
+							<div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>
+								<HiSparkles />
+							</div>
 							<FeatureBoxTitle>No SDK? No Problem!</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								Connect to the API via Websocket or HTTP, then interact with
@@ -980,9 +1019,9 @@ WHERE general__entity_name = 'player_42';`}
 					infrastructure
 				</SectionDescription>
 				<FeaturesGrid>
-					<FeatureBox>
+					<FeatureBox $wide>
 						<FeatureContent>
-							<div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🚀</div>
+							<TypingCliCommands />
 							<FeatureBoxTitle>Developer-First Infrastructure</FeatureBoxTitle>
 							<FeatureBoxDescription>
 								The{" "}
@@ -990,39 +1029,43 @@ WHERE general__entity_name = 'player_42';`}
 									Vircadia World CLI
 								</a>{" "}
 								provisions everything from development to production, backed by
-								comprehensive CI pipelines ensuring stability and reliability
-								across the entire system.
+								comprehensive CI pipelines.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
 
-					<FeatureBox $wide>
+					<FeatureBox>
 						<FeatureContent>
-							<div style={{ textAlign: "center", marginBottom: "1rem" }}>
-								<img
-									src="/img/asf.svg"
-									alt="Apache Software Foundation Logo"
-									style={{ height: "60px" }}
-								/>
+							<div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>
+								<HiShieldCheck />
 							</div>
-							<FeatureBoxTitle>Permissively Licensed (FOSS)</FeatureBoxTitle>
+							<FeatureBoxTitle>Enterprise Security</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								Vircadia is Apache 2.0 licensed, providing legal certainty and
-								flexibility for commercial use, modification, and distribution
-								at any scale.
+								OAuth 2.0 authentication with no passwords, validated by
+								partners like Deutsche Telekom for secure access management.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
 
-					<FeatureBox $wide>
+					<FeatureBox>
 						<FeatureContent>
-							<FeatureBoxTitle>Enterprise-Grade Scalability</FeatureBoxTitle>
+							<AnimatedSwordsEmoji>🚀</AnimatedSwordsEmoji>
+							<FeatureBoxTitle>Deploy Anywhere</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								Scale to millions of objects and players with millisecond
-								latency, powered by PostgreSQL, Bun.sh, and Docker.
 								Containerized deployment enables Anywhere, Anytime, Any scale,
 								Any device accessibility with consistent performance and
 								reliability.
+							</FeatureBoxDescription>
+						</FeatureContent>
+					</FeatureBox>
+
+					<FeatureBox $wide>
+						<FeatureContent>
+							<FeatureBoxTitle>Minimalist Framework</FeatureBoxTitle>
+							<FeatureBoxDescription>
+								Vircadia cuts out unnecessary layers and abstraction for maximum
+								performance, wrapping core components into a single, cohesive
+								framework.
 							</FeatureBoxDescription>
 							<LogoGrid>
 								<EmptyBox />
@@ -1039,18 +1082,6 @@ WHERE general__entity_name = 'player_42';`}
 							</LogoGrid>
 						</FeatureContent>
 					</FeatureBox>
-
-					<FeatureBox>
-						<FeatureContent>
-							<div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🔒</div>
-							<FeatureBoxTitle>Enterprise Security</FeatureBoxTitle>
-							<FeatureBoxDescription>
-								OAuth 2.0 authentication with no passwords, validated by
-								partners like Deutsche Telekom, Manchester United, and more for
-								secure access management at scale.
-							</FeatureBoxDescription>
-						</FeatureContent>
-					</FeatureBox>
 				</FeaturesGrid>
 			</FeaturesContainer>
 		</>
@@ -1060,7 +1091,16 @@ WHERE general__entity_name = 'player_42';`}
 function SponsorsSection() {
 	return (
 		<SponsorContainer>
-			<SponsorTitle>Supported By</SponsorTitle>
+			<HeartIcon>
+				<VscHeartFilled />
+			</HeartIcon>
+			<OpenSourceHeader>Free & open source</OpenSourceHeader>
+			<OpenSourceDescription>
+				Vircadia is Apache 2.0 Licensed and will always be free and open source.
+				This is made possible by our contributors and these companies:
+			</OpenSourceDescription>
+
+			{/* <SponsorTitle>Supported By</SponsorTitle> */}
 
 			<SponsorTier>Partners</SponsorTier>
 			<PartnerSponsorGrid>
@@ -1254,18 +1294,111 @@ function BottomCTASection() {
 	);
 }
 
-// Add this CSS variable to the root Layout component
-// We need to find where theme variables are defined and add this
-// Let's add a style block to the component that renders the site
+// Add styled components for custom terminal
+const TerminalContainer = styled.div`
+	background-color: var(--ifm-code-background);
+	border-radius: 6px;
+	padding: 16px;
+	font-family: var(--ifm-font-family-monospace);
+	position: relative;
+	margin-bottom: 1rem;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+`;
 
-// Add this somewhere in the file, ideally before the export default function
-const GlobalStyle = styled.div`
-	--ifm-invert-filter: invert(0);
+const TerminalHeader = styled.div`
+	display: flex;
+	margin-bottom: 10px;
+`;
+
+const TerminalButton = styled.div`
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	margin-right: 6px;
 	
-	[data-theme='dark'] & {
-		--ifm-invert-filter: invert(1);
+	&:nth-child(1) {
+		background-color: #ff5f56;
+	}
+	
+	&:nth-child(2) {
+		background-color: #ffbd2e;
+	}
+	
+	&:nth-child(3) {
+		background-color: #27c93f;
 	}
 `;
+
+const TerminalContent = styled.span`
+	color: var(--ifm-code-color);
+	min-height: 24px;
+	font-size: 0.9rem;
+	line-height: 1.5;
+	
+	&::before {
+		content: '$ ';
+		color: var(--ifm-color-primary);
+	}
+`;
+
+// Add new TypingCliCommands component
+function TypingCliCommands() {
+	const typedElementRef = useRef<HTMLDivElement>(null);
+	const [isInitialized, setIsInitialized] = useState(false);
+
+	useEffect(() => {
+		const typedElement = typedElementRef.current;
+		if (typedElement && !isInitialized) {
+			// Add a space character to the element so Typed.js can work with it
+			typedElement.textContent = " ";
+
+			// Extract scripts from package.json
+			const scriptEntries = Object.entries(cliPackageJson.scripts || {});
+			const scripts = scriptEntries.map(([key, _]) => key);
+
+			// Shuffle the scripts array
+			const shuffledScripts = [...scripts].sort(() => Math.random() - 0.5);
+
+			// Take only a subset if there are too many scripts
+			const selectedScripts = shuffledScripts.slice(0, 15);
+
+			// Add a small delay for better UX
+			setTimeout(() => {
+				// Initialize Typed.js on the element
+				const typed = new Typed(typedElement, {
+					strings: selectedScripts,
+					typeSpeed: 40,
+					backSpeed: 20,
+					loop: true,
+					showCursor: true,
+					cursorChar: "█", // Change to block character for terminal-like cursor
+					autoInsertCss: true,
+					startDelay: 300,
+					backDelay: 2500,
+				});
+
+				setIsInitialized(true);
+
+				// Clean up the typed instance on unmount
+				return () => {
+					typed.destroy();
+				};
+			}, 100);
+		}
+	}, [isInitialized]);
+
+	return (
+		<TerminalContainer>
+			<TerminalHeader>
+				<TerminalButton />
+				<TerminalButton />
+				<TerminalButton />
+			</TerminalHeader>
+			<TerminalContent ref={typedElementRef} />
+		</TerminalContainer>
+	);
+}
 
 export default function Home(): ReactNode {
 	const { siteConfig } = useDocusaurusContext();
