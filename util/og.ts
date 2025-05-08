@@ -3,6 +3,8 @@ import * as path from "node:path";
 import puppeteer from "puppeteer";
 import type * as htmlToImageType from "html-to-image";
 
+import docusaurusConfig from "../docusaurus.config.js";
+
 declare global {
 	interface Window {
 		htmlToImage: typeof htmlToImageType;
@@ -11,6 +13,7 @@ declare global {
 
 const LOGO_PATH = path.resolve(__dirname, "../static/img/logo.png");
 const OG_IMAGE_PATH = path.resolve(__dirname, "../static/img/og/vircadia.png");
+const TAGLINE = docusaurusConfig.tagline;
 
 (async () => {
 	// Launch headless browser
@@ -20,6 +23,9 @@ const OG_IMAGE_PATH = path.resolve(__dirname, "../static/img/og/vircadia.png");
 	// Load logo from static/img directory as data URI
 	const logoDataUri = `data:image/png;base64,${fs.readFileSync(LOGO_PATH, "base64")}`;
 
+	// Load Manrope font from static/font directory as data URI
+	const fontDataUri = `data:font/ttf;base64,${fs.readFileSync(path.resolve(__dirname, "../static/font/Manrope/Manrope-VariableFont_wght.ttf"), "base64")}`;
+
 	// Define HTML content for the OG image
 	const htmlContent = `
     <!DOCTYPE html>
@@ -27,24 +33,38 @@ const OG_IMAGE_PATH = path.resolve(__dirname, "../static/img/og/vircadia.png");
       <head>
         <meta charset="UTF-8" />
         <style>
+          @font-face {
+            font-family: 'Manrope';
+            src: url('${fontDataUri}') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+          }
           body,html { margin: 0; padding: 0; }
           #og-container {
             width: 1200px;
             height: 630px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             background-color: #ffffff;
           }
           #og-container img {
-            max-width: 100%;
-            max-height: 100%;
+            max-width: 50%;
+            max-height: 50%;
+          }
+          #slogan {
+            font-family: 'Manrope', sans-serif;
+            font-size: 64px;
+            color: #000000;
+            margin-top: 20px;
           }
         </style>
       </head>
       <body>
         <div id="og-container">
           <img src="${logoDataUri}" alt="Logo" />
+          <div id="slogan">${TAGLINE}</div>
         </div>
       </body>
     </html>

@@ -68,7 +68,7 @@ const config: Config = {
 					exclude: ["**/vircadia-world-sdk-py/**"],
 					// Please change this to your repo.
 					// Remove this to remove the "edit this page" links.
-					editUrl: ({docPath}) => {
+					editUrl: ({ docPath }) => {
 						// Remove 'docs/' from the path if present
 						return `https://github.com/Vircadia/vircadia-world/edit/master/${docPath}`;
 					},
@@ -93,7 +93,7 @@ const config: Config = {
 
 	themeConfig: {
 		// Replace with your project's social card
-		image: "img/docusaurus-social-card.jpg",
+		image: "img/og/vircadia.png",
 		navbar: {
 			title: "Vircadia",
 			logo: {
