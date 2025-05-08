@@ -726,7 +726,7 @@ function VircadiaFlow() {
 }
 
 // Add animated wrapper to animate StateTickScene entrance on scroll
-const AnimatedCanvasWrapper = styled.div<{ $inView: boolean }>`
+const StateTickCanvasWrapper = styled.div<{ $inView: boolean }>`
 	position: relative;
 	opacity: ${({ $inView }) => ($inView ? 1 : 0)};
 	transform: translateY(${({ $inView }) => ($inView ? "0" : "20px")});
@@ -736,13 +736,13 @@ const AnimatedCanvasWrapper = styled.div<{ $inView: boolean }>`
 // Hoisted state-tick logic with hover and auto-cycle
 const positions: number[] = [-1.2, -0.8, -0.4, 0, 0.4, 0.8, 1.2];
 const labels: string[] = [
-	"543 entities",
-	"547 entities",
-	"551 entities",
-	"555 entities",
-	"559 entities",
-	"563 entities",
-	"567 entities",
+	"Tick 0522",
+	"Tick 0523",
+	"Tick 0524",
+	"Tick 0525",
+	"Tick 0526",
+	"Tick 0527",
+	"Tick 0528",
 ];
 
 // Ticker component using stencil mask
@@ -751,6 +751,7 @@ function StateTicker({ label, visible }: { label: string; visible: boolean }) {
 	const stencil = useMask(1);
 	const { colorMode } = useColorMode();
 	const isBrowser = useIsBrowser();
+	const isFirstRender = useRef(true);
 
 	// Get CSS variable for primary color based on the current theme
 	const getCssVariable = (variable: string) => {
@@ -776,8 +777,20 @@ function StateTicker({ label, visible }: { label: string; visible: boolean }) {
 
 	const textColor = getCssVariable("--ifm-color-primary");
 
+	// Set initial position without animation
+	useEffect(() => {
+		if (ref.current) {
+			if (isFirstRender.current) {
+				// Set initial position directly without animation
+				ref.current.position.y = visible ? 0 : -2;
+				isFirstRender.current = false;
+			}
+		}
+	}, [visible]);
+
 	useFrame((state, delta) => {
 		if (ref.current) {
+			// Handle smooth transitions
 			easing.damp(ref.current.position, "y", visible ? 0 : -2, 0.2, delta);
 		}
 	});
@@ -899,7 +912,7 @@ function StateTickScene(): ReactNode {
 	};
 
 	return (
-		<AnimatedCanvasWrapper
+		<StateTickCanvasWrapper
 			ref={containerRef}
 			$inView={inView}
 			style={{ background: "transparent", height: "200px", width: "100%" }}
@@ -949,7 +962,7 @@ function StateTickScene(): ReactNode {
 					</group>
 				</Canvas>
 			)}
-		</AnimatedCanvasWrapper>
+		</StateTickCanvasWrapper>
 	);
 }
 
@@ -1304,6 +1317,7 @@ const TerminalContainer = styled.div`
 	margin-bottom: 1rem;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
+	user-select: none;
 `;
 
 const TerminalHeader = styled.div`
