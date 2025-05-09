@@ -692,6 +692,11 @@ function VircadiaFlow() {
 		style: { stroke: "var(--ifm-color-primary)", strokeWidth: 2 },
 	};
 
+	// Add an onInit callback to ensure the ReactFlow chart is centered on mount
+	const onInit = useCallback((instance) => {
+		instance.fitView({ padding: 0.1 });
+	}, []);
+
 	return (
 		<ReactFlowProvider>
 			<ReactFlowContainer>
@@ -701,6 +706,8 @@ function VircadiaFlow() {
 					nodeTypes={nodeTypes}
 					defaultEdgeOptions={edgeOptions}
 					fitView
+					fitViewOptions={{ padding: 0.1 }}
+					onInit={onInit}
 					zoomOnScroll={false}
 					zoomOnPinch={false}
 					zoomOnDoubleClick={false}
