@@ -1316,7 +1316,8 @@ const TerminalContainer = styled.div`
 	position: relative;
 	margin-bottom: 1rem;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	overflow: hidden;
+	overflow: visible;
+	min-height: 120px;
 	user-select: none;
 `;
 
@@ -1345,6 +1346,8 @@ const TerminalButton = styled.div`
 `;
 
 const TerminalContent = styled.span`
+	white-space: pre-wrap;
+	word-break: break-all;
 	color: var(--ifm-code-color);
 	min-height: 24px;
 	font-size: 0.9rem;
