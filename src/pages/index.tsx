@@ -800,7 +800,7 @@ function StateTicker({ label, visible }: { label: string; visible: boolean }) {
 			<Text
 				position={[0, 0, 0]}
 				fontSize={0.3}
-				font="font/Manrope/Manrope-VariableFont_wght.ttf"
+				font="font/Manrope/Manrope-SemiBold.ttf"
 				color={textColor}
 				anchorX="center"
 				anchorY="middle"
