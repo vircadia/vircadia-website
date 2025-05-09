@@ -902,20 +902,46 @@ function StateTickScene(): ReactNode {
 	}, [inView]);
 
 	const currentIndex = hovered !== null ? hovered : autoIndex;
+
+	// add handler for mouse hover events
 	const handlePointerOver =
 		(index: number) => (e: ThreeEvent<PointerEvent>) => {
 			e.stopPropagation();
 			debouncedHover(index);
 		};
-	const handlePointerOut = () => {
-		debouncedHover(null);
+
+	// add handler for touch/mouse down events to support touch hold behavior
+	const handlePointerDown = (index: number) => (e: ThreeEvent<PointerEvent>) => {
+		// stop propagation so this is recognized as a direct interaction
+		e.stopPropagation();
+		// immediately set hovered on touch/mouse down
+		setHovered(index);
 	};
+
+	// modify pointer out to only clear on mouse interactions
+	const handlePointerOut = (e: ThreeEvent<PointerEvent>) => {
+		if (e.pointerType === 'mouse') {
+			debouncedHover(null);
+		}
+	};
+
+	// clear hovered state on touch anywhere else on the page
+	useEffect(() => {
+		const handlePointerDownOutside = (e: PointerEvent) => {
+			if (e.pointerType === 'touch') {
+				setHovered(null);
+			}
+		};
+		// listen in capture phase so mesh interactions set hovered afterward
+		document.addEventListener('pointerdown', handlePointerDownOutside, true);
+		return () => document.removeEventListener('pointerdown', handlePointerDownOutside, true);
+	}, []);
 
 	return (
 		<StateTickCanvasWrapper
 			ref={containerRef}
 			$inView={inView}
-			style={{ background: "transparent", height: "200px", width: "100%" }}
+			style={{ background: 'transparent', height: '200px', width: '100%' }}
 		>
 			{inView && (
 				<Canvas orthographic camera={{ position: [0, 0, 5], zoom: 70 }}>
@@ -929,6 +955,7 @@ function StateTickScene(): ReactNode {
 							position={[x, 0, 0]}
 							onPointerOver={handlePointerOver(index)}
 							onPointerOut={handlePointerOut}
+							onPointerDown={handlePointerDown(index)}
 						>
 							<boxGeometry args={[0.2, 1, 0.2]} />
 							<meshStandardMaterial
