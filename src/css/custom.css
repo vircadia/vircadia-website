@@ -7,7 +7,8 @@
 /* Load Manrope font */
 @font-face {
 	font-family: "Manrope";
-	src: url("/font/Manrope/Manrope-VariableFont_wght.ttf") format('truetype-variations');
+	src: url("/font/Manrope/Manrope-VariableFont_wght.ttf")
+		format("truetype-variations");
 	font-weight: 100 900; /* Variable font weight range */
 	font-style: normal;
 	font-display: swap;
@@ -25,8 +26,8 @@
 	--ifm-code-font-size: 95%;
 	--docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 	--ifm-font-family-base: "Manrope", sans-serif;
-	--announcement-bar-bg: #FAFBFC;
-	--announcement-bar-text: #091E42;
+	--announcement-bar-bg: #fafbfc;
+	--announcement-bar-text: #091e42;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -40,13 +41,13 @@
 	--ifm-color-primary-lightest: #52d2ff;
 	--docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 	--announcement-bar-bg: #002740;
-	--announcement-bar-text: #01BDFF;
+	--announcement-bar-text: #01bdff;
 }
 
 /* Also target any dynamic CSS-module announcementBar_* class */
 [class*="announcementBar_"] {
 	background-color: var(--announcement-bar-bg) !important;
-	color:            var(--announcement-bar-text) !important;
+	color: var(--announcement-bar-text) !important;
 }
 [class*="announcementBar_"] a,
 [class*="announcementBar_"] a:visited {
@@ -56,9 +57,15 @@
 /* Dark mode for CSS-module class */
 [data-theme="dark"] [class*="announcementBar_"] {
 	background-color: var(--announcement-bar-bg) !important;
-	color:            var(--announcement-bar-text) !important;
+	color: var(--announcement-bar-text) !important;
 }
 [data-theme="dark"] [class*="announcementBar_"] a,
 [data-theme="dark"] [class*="announcementBar_"] a:visited {
 	color: var(--announcement-bar-text) !important;
+}
+
+/* Prevent horizontal scrollbar */
+html,
+body {
+	overflow-x: hidden !important;
 }
