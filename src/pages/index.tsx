@@ -918,16 +918,17 @@ function StateTickScene(): ReactNode {
 		};
 
 	// add handler for touch/mouse down events to support touch hold behavior
-	const handlePointerDown = (index: number) => (e: ThreeEvent<PointerEvent>) => {
-		// stop propagation so this is recognized as a direct interaction
-		e.stopPropagation();
-		// immediately set hovered on touch/mouse down
-		setHovered(index);
-	};
+	const handlePointerDown =
+		(index: number) => (e: ThreeEvent<PointerEvent>) => {
+			// stop propagation so this is recognized as a direct interaction
+			e.stopPropagation();
+			// immediately set hovered on touch/mouse down
+			setHovered(index);
+		};
 
 	// modify pointer out to only clear on mouse interactions
 	const handlePointerOut = (e: ThreeEvent<PointerEvent>) => {
-		if (e.pointerType === 'mouse') {
+		if (e.pointerType === "mouse") {
 			debouncedHover(null);
 		}
 	};
@@ -935,20 +936,25 @@ function StateTickScene(): ReactNode {
 	// clear hovered state on touch anywhere else on the page
 	useEffect(() => {
 		const handlePointerDownOutside = (e: PointerEvent) => {
-			if (e.pointerType === 'touch') {
+			if (e.pointerType === "touch") {
 				setHovered(null);
 			}
 		};
 		// listen in capture phase so mesh interactions set hovered afterward
-		document.addEventListener('pointerdown', handlePointerDownOutside, true);
-		return () => document.removeEventListener('pointerdown', handlePointerDownOutside, true);
+		document.addEventListener("pointerdown", handlePointerDownOutside, true);
+		return () =>
+			document.removeEventListener(
+				"pointerdown",
+				handlePointerDownOutside,
+				true,
+			);
 	}, []);
 
 	return (
 		<StateTickCanvasWrapper
 			ref={containerRef}
 			$inView={inView}
-			style={{ background: 'transparent', height: '200px', width: '100%' }}
+			style={{ background: "transparent", height: "200px", width: "100%" }}
 		>
 			{inView && (
 				<Canvas orthographic camera={{ position: [0, 0, 5], zoom: 70 }}>
@@ -1003,7 +1009,7 @@ function StateTickScene(): ReactNode {
 function FeaturesSection() {
 	return (
 		<>
-			<FeaturesContainer>
+			<FeaturesContainer id="features">
 				<FeaturesGrid>
 					<FeatureBox>
 						<FeatureContent>
@@ -1051,15 +1057,18 @@ WHERE general__entity_name = 'player_42';`}
 							</div>
 							<FeatureBoxTitle>No SDK? No Problem!</FeatureBoxTitle>
 							<FeatureBoxDescription>
-								<a href="/vircadia-world/server/service/api/">Connect to the API</a> via Websocket or HTTP, then interact with
-								Vircadia directly with your favorite SQL client.
+								<a href="/vircadia-world/server/service/api/">
+									Connect to the API
+								</a>{" "}
+								via Websocket or HTTP, then interact with Vircadia directly with
+								your favorite SQL client.
 							</FeatureBoxDescription>
 						</FeatureContent>
 					</FeatureBox>
 				</FeaturesGrid>
 			</FeaturesContainer>
 
-			<FeaturesContainer>
+			<FeaturesContainer id="production">
 				<SectionTitle>Easy to start, Advanced to scale</SectionTitle>
 				<SectionDescription>
 					Scale from prototype to production with enterprise-grade tools and
@@ -1137,7 +1146,7 @@ WHERE general__entity_name = 'player_42';`}
 
 function SponsorsSection() {
 	return (
-		<SponsorContainer>
+		<SponsorContainer id="sponsors">
 			<HeartIcon>
 				<VscHeartFilled />
 			</HeartIcon>
@@ -1312,7 +1321,7 @@ const IconWrapper = styled.div`
 function BottomCTASection() {
 	const { siteConfig } = useDocusaurusContext();
 	return (
-		<BottomCTAContainer>
+		<BottomCTAContainer id="get-started">
 			<BottomCTAOverlay />
 			<BottomCTAContent>
 				<IconWrapper>
