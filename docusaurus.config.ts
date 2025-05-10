@@ -33,30 +33,7 @@ const config: Config = {
 	},
 
 	// Add the Google Fonts embed code
-	headTags: [
-		{
-			tagName: "link",
-			attributes: {
-				rel: "preconnect",
-				href: "https://fonts.googleapis.com",
-			},
-		},
-		{
-			tagName: "link",
-			attributes: {
-				rel: "preconnect",
-				href: "https://fonts.gstatic.com",
-				crossorigin: "anonymous",
-			},
-		},
-		{
-			tagName: "link",
-			attributes: {
-				rel: "stylesheet",
-				href: "https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap",
-			},
-		},
-	],
+	headTags: [],
 
 	presets: [
 		[
@@ -102,17 +79,30 @@ const config: Config = {
 				src: "img/icon.svg",
 			},
 			items: [
-				{ to: "/vircadia-world", label: "Documentation", position: "left" },
+				{
+					to: "/vircadia-world/",
+					label: "Docs",
+					position: "right",
+				},
 				{
 					to: "/vircadia-world/",
 					label: "Get Started",
-					position: "left",
-				},
-				{ to: "/blog", label: "Blog", position: "left" },
-				{
-					href: "https://github.com/Vircadia",
-					label: "GitHub",
 					position: "right",
+				},
+				{
+					to: "/blog",
+					label: "Blog",
+					position: "right",
+				},
+				{
+					label: "Case Studies",
+					position: "right",
+					items: [
+						{
+							label: "Linux Professional Institute",
+							to: "/stories/vircadia-x-lpi",
+						},
+					],
 				},
 			],
 		},
